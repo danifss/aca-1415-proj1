@@ -128,7 +128,7 @@ void mips::buildID(void)
       jumpT->dout(JumpTarget);
 
 
-      // Selects Register to Write
+      // Jump Register
       jumpM = new mux< sc_uint<32> > ("muxJump");
    
       jumpM->sel(JumpReg);
