@@ -20,11 +20,20 @@ void hazard::detect_hazard()
 	{
 		
 
-		if(BranchTaken.read() == true || Jump.read() == true || JumpReg.read() == true){
+		if( (BranchTaken.read() == true || Jump.read() == true || JumpReg.read() == true) && Link.read() == false ){
 			//enable_pc.write(false);
 			enable_ifid.write(false);
 			reset_ifid.write(true);
 			reset_idexe.write(true);
+			
+			
+			
+		}
+		else if( (Jump.read() == true || JumpReg.read() == true) && Link.read() == true ){
+			//enable_pc.write(false);
+			enable_ifid.write(false);
+			reset_ifid.write(true);
+			//reset_idexe.write(true);
 			
 			
 			

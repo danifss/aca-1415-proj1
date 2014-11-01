@@ -23,6 +23,9 @@ SC_MODULE(reg_id_exe_t) {
 	sc_in  < bool > reset;
 	sc_in  < bool > enable;
 
+	sc_in < bool > Link_id;
+	sc_out < bool > Link_exe;
+
 	sc_in  < sc_uint<32> > rega_id, regb_id, imm_id, PC4_id;
 	sc_out < sc_uint<32> > rega_exe, regb_exe, imm_exe, PC4_exe;
 
@@ -46,7 +49,7 @@ SC_MODULE(reg_id_exe_t) {
 	// Modules
 	
 	regT < sc_uint<32> > *rega,*regb,*imm,*PC4;
-	regT < bool > *MemRead, *MemWrite, *MemtoReg, *Branch, *RegWrite, *ALUSrc; 
+	regT < bool > *Link, *MemRead, *MemWrite, *MemtoReg, *Branch, *RegWrite, *ALUSrc; 
 	regT < sc_uint<5> > *WriteReg;
 	regT < sc_uint<3> > *ALUOp;
 
@@ -54,6 +57,14 @@ SC_MODULE(reg_id_exe_t) {
 	regT < bool > *valid;          // only for visualization purposes
 
 	SC_CTOR(reg_id_exe_t) {
+
+
+		Link = new regT < bool > ("linkidexe");;
+		Link->din(Link_id);
+		Link->dout(Link_exe);
+		Link->clk(clk);
+		Link->enable(enable);
+		Link->reset(reset);
 
 		rega = new regT < sc_uint<32> > ("rega");;
 		rega->din(rega_id);

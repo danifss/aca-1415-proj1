@@ -35,6 +35,7 @@ SC_MODULE(control) {
   sc_out< bool >  BranchType;
   sc_out< bool >  Jump;
   sc_out< bool >  JumpReg;
+  sc_out< bool >  Link;
   sc_out< bool >  MemRead;        
   sc_out< bool >  MemtoReg;        
   sc_out< sc_uint<3> >  ALUOp;        

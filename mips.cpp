@@ -65,7 +65,16 @@ void mips::buildID(void)
       mr->sel(RegDst);
       mr->din0(rt);
       mr->din1(rd);
-      mr->dout(WriteReg);
+      mr->dout(WriteReg_prev);
+
+
+      // If jal selects reg31 to write
+      link = new muxl< sc_uint<5> > ("muxJal");
+
+      link->sel(Link);
+      link->din0(WriteReg_prev);
+      link->dout(WriteReg);
+
    
       // Register File
       rfile = new regfile ("regfile");
@@ -97,6 +106,7 @@ void mips::buildID(void)
       ctrl->BranchType(BranchType);
       ctrl->Jump(Jump);
       ctrl->JumpReg(JumpReg);
+      ctrl->Link(Link);
       ctrl->MemRead(MemRead);
       ctrl->MemWrite(MemWrite);
       ctrl->MemtoReg(MemtoReg);
@@ -135,6 +145,9 @@ void mips::buildID(void)
       jumpM->din0(NPC_prev);
       jumpM->din1(regdata1);
       jumpM->dout(NPC);
+
+      // Jump and Link
+
 
 
       // Adds Branch Immediate to Program Counter + 4
@@ -219,7 +232,16 @@ void mips::buildWB(void)
       m2->sel(MemtoReg_wb);
       m2->din0(ALUOut_wb);
       m2->din1(MemOut_wb);
-      m2->dout(WriteVal);
+      m2->dout(WriteVal_prev);
+
+      muxlinkval = new mux< sc_uint<32> > ("muxlinkval");
+   
+      muxlinkval->sel(Link_wb);
+      muxlinkval->din0(WriteVal_prev);
+      muxlinkval->din1(PC4_wb);
+      muxlinkval->dout(WriteVal);
+
+
 
 }
 
@@ -257,6 +279,8 @@ void mips::buildArchitecture(void){
 
       //reg_id_exe
       reg_id_exe = new reg_id_exe_t("reg_id_exe");
+      reg_id_exe->Link_id(Link);
+      reg_id_exe->Link_exe(Link_exe);
       reg_id_exe->rega_id(regdata1);
       reg_id_exe->rega_exe(rega_exe);
       reg_id_exe->regb_id(regdata2);
@@ -299,6 +323,10 @@ void mips::buildArchitecture(void){
 
       //reg_exe_mem
       reg_exe_mem = new reg_exe_mem_t("reg_exe_mem");
+      reg_exe_mem->PC4_exe(PC4_exe);
+      reg_exe_mem->PC4_mem(PC4_mem);
+      reg_exe_mem->Link_exe(Link_exe);
+      reg_exe_mem->Link_mem(Link_mem);
       reg_exe_mem->aluOut_exe(ALUOut);
       reg_exe_mem->aluOut_mem(ALUOut_mem);
       reg_exe_mem->MemRead_exe(MemRead_exe);
@@ -336,6 +364,10 @@ void mips::buildArchitecture(void){
       
       //reg_mem_wb
       reg_mem_wb = new reg_mem_wb_t("reg_mem_wb");
+      reg_mem_wb->PC4_mem(PC4_mem);
+      reg_mem_wb->PC4_wb(PC4_wb);
+      reg_mem_wb->Link_mem(Link_mem);
+      reg_mem_wb->Link_wb(Link_wb);
       reg_mem_wb->aluOut_mem(ALUOut_mem);
       reg_mem_wb->aluOut_wb(ALUOut_wb);
       reg_mem_wb->memOut_mem(MemOut);
@@ -372,6 +404,7 @@ void mips::buildArchitecture(void){
 	hazard_unit->BranchTaken(BranchTaken);
       hazard_unit->Jump(Jump);
       hazard_unit->JumpReg(JumpReg);
+      hazard_unit->Link(Link);
 	}
 
 mips::~mips(void)
