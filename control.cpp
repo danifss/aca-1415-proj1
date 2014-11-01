@@ -8,8 +8,8 @@ void control::entry()
 {
   switch(opcode.read()) {
     case 0: // R-format
-            RegDst.write(1);  
-            ALUSrc.write(0);
+        RegDst.write(1);  
+        ALUSrc.write(0);
 	    MemtoReg.write(0);
 	    RegWrite.write(1);
 	    MemRead.write(0);
@@ -17,6 +17,7 @@ void control::entry()
 	    Branch.write(0);
 	    Jump.write(0);
 	    JumpReg.write(0);
+	    Link.write(0);
 	    switch(funct.read()) {
 	       case 8:  JumpReg.write(1);
 	       			break;
@@ -41,6 +42,19 @@ void control::entry()
 	    BranchType.write(0);	//BEQ
 	    Jump.write(1);
 	    JumpReg.write(0);
+	    Link.write(0);
+	    ALUOp.write(6);
+	    break;
+	case  3: // jal
+        ALUSrc.write(0);
+	    RegWrite.write(1);
+	    MemRead.write(0);
+	    MemWrite.write(0);
+	    Branch.write(0);
+	    BranchType.write(0);	//BEQ
+	    Jump.write(1);
+	    JumpReg.write(0);
+	    Link.write(1);
 	    ALUOp.write(6);
 	    break;
     case  4: // beq
@@ -52,6 +66,7 @@ void control::entry()
 	    BranchType.write(0);	//BEQ
 	    Jump.write(0);
 	    JumpReg.write(0);
+	    Link.write(0);
 	    ALUOp.write(6);
 	    break;
 	case  5: // bne
@@ -63,6 +78,7 @@ void control::entry()
 		BranchType.write(1);	//BNE
 		Jump.write(0);
 		JumpReg.write(0);
+		Link.write(0);
 	    ALUOp.write(6);
 	    break;
     case 35: // lw
@@ -75,6 +91,7 @@ void control::entry()
 	    Branch.write(0);
 	    Jump.write(0);
 	    JumpReg.write(0);
+	    Link.write(0);
 	    ALUOp.write(2);
 	    break;
     case 43: // sw
@@ -85,6 +102,7 @@ void control::entry()
 	    Branch.write(0);
 	    Jump.write(0);
 	    JumpReg.write(0);
+	    Link.write(0);
 	    ALUOp.write(2);
 	    break;
    default: // Unknown opcode

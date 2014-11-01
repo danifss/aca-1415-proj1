@@ -20,6 +20,7 @@
 
 #include "mux.h"
 #include "muxj.h"
+#include "muxl.h"
 #include "reg.h"
 #include "ext.h"
 #include "shiftl2.h"
@@ -73,6 +74,8 @@ SC_MODULE(mips) {
 	compare *comp;
 	orbitwise *jumpT;
 	andbitwise *pc4bitms;
+	muxl< sc_uint<5> > *link;
+	mux< sc_uint<32> > *muxlinkval;
 
 	//EXE
 	alu               *alu1;      // ALU
@@ -115,7 +118,7 @@ SC_MODULE(mips) {
 	sc_signal <bool> res_comp;
 
 	sc_signal < sc_uint<32> > addr_ext; // imm_ext shift left 2
-	sc_signal < sc_uint<32> > NPC_prev; // imm_ext shift left 2
+	sc_signal < sc_uint<32> > NPC_prev; // NPC para descobrir se há jumpRegister ou não
 	// instruction fields
 	sc_signal < sc_uint<5> > rs, rt, rd;
 	sc_signal < sc_uint<16> > imm;
@@ -123,10 +126,13 @@ SC_MODULE(mips) {
 	sc_signal < sc_uint<5> > shamt;
 	sc_signal < sc_uint<6> > funct;
 	// register file signals
+	sc_signal < sc_uint<5> > WriteReg_prev;  // register to write
 	sc_signal < sc_uint<5> > WriteReg;  // register to write
+
 
 	sc_signal < sc_uint<32> > regdata1, // value of register rs
 						regdata2, // value of regiter rt
+						WriteVal_prev,
 						WriteVal; // value to write in register WriteReg
 
 	sc_signal < sc_uint<32> > imm_ext;  // imm sign extended
@@ -144,6 +150,7 @@ SC_MODULE(mips) {
 	sc_signal <bool> BranchType;
 	sc_signal <bool> Jump;
 	sc_signal <bool> JumpReg;
+	sc_signal <bool> Link;
 	sc_signal < sc_uint<3> > ALUOp;
 	sc_signal <bool> Branch;
 
@@ -156,7 +163,7 @@ SC_MODULE(mips) {
 	sc_signal < sc_uint<32> > imm_exe, PC4_exe;
 	
 	sc_signal < sc_uint<5> > WriteReg_exe;
-	sc_signal <bool> Zero;
+	sc_signal <bool> Zero, Link_exe;
 	// ALU signals
 	sc_signal < sc_uint<32> > ALUIn2,   // ALU second operand
 						ALUOut;   // ALU Output
@@ -174,11 +181,11 @@ SC_MODULE(mips) {
 
 	//MEM
 	sc_signal < sc_uint<32> > MemOut;   // data memory output
-	sc_signal < sc_uint<32> > ALUOut_mem, BranchTarget_mem;   
+	sc_signal < sc_uint<32> > ALUOut_mem, BranchTarget_mem, PC4_mem;   
 	sc_signal < sc_uint<5> > WriteReg_mem;   
 	sc_signal <bool> MemRead_mem, MemWrite_mem, MemtoReg_mem;
 	sc_signal <bool> RegWrite_mem;
-	sc_signal <bool> Branch_mem, Zero_mem;
+	sc_signal <bool> Branch_mem, Zero_mem, Link_mem;
 
 	// the following two signals are not used by the architecture
 	// they are used only for visualization purposes
@@ -186,10 +193,11 @@ SC_MODULE(mips) {
 	sc_signal < bool > valid_mem;
 
 	//WB
-	sc_signal < sc_uint<32> > MemOut_wb, ALUOut_wb;   
+	sc_signal < sc_uint<32> > MemOut_wb, ALUOut_wb, PC4_wb;   
 	sc_signal < sc_uint<5> > WriteReg_wb;   
 	sc_signal <bool> MemtoReg_wb;
 	sc_signal <bool> RegWrite_wb;
+	sc_signal <bool> Link_wb;
 
 	// the following two signals are not used by the architecture
 	// they are used only for visualization purposes

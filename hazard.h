@@ -36,6 +36,7 @@ SC_MODULE( hazard )
 	sc_in< bool > BranchTaken;
     sc_in< bool > Jump;
     sc_in< bool > JumpReg;
+    sc_in< bool > Link;
 
     sc_out< bool >  enable_pc, enable_ifid, reset_idexe, reset_ifid, reset_exemem;
 
@@ -46,7 +47,7 @@ SC_MODULE( hazard )
 		  << WriteReg_exe << RegWrite_exe
 		  << WriteReg_mem << RegWrite_mem
 			<< MemRead
-			<< BranchTaken << Jump << JumpReg;
+			<< BranchTaken << Jump << JumpReg << Link;
    }
   
     void detect_hazard();

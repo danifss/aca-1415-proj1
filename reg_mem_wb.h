@@ -23,8 +23,11 @@ SC_MODULE(reg_mem_wb_t) {
 	sc_in  < bool > reset;
 	sc_in  < bool > enable;
 
-	sc_in  < sc_uint<32> > aluOut_mem, memOut_mem;
-	sc_out < sc_uint<32> > aluOut_wb, memOut_wb;
+	sc_in  < bool > Link_mem;
+	sc_out  < bool > Link_wb;
+
+	sc_in  < sc_uint<32> > aluOut_mem, memOut_mem, PC4_mem;
+	sc_out < sc_uint<32> > aluOut_wb, memOut_wb, PC4_wb;
 
 	sc_in  < sc_uint<5> > WriteReg_mem;
 	sc_out < sc_uint<5> > WriteReg_wb;
@@ -39,14 +42,28 @@ SC_MODULE(reg_mem_wb_t) {
 
 	// Modules
 
-	regT < sc_uint<32> > *aluOut, *memOut;
+	regT < sc_uint<32> > *aluOut, *memOut, *PC4;
 	regT < sc_uint<5> > *WriteReg;
-	regT < bool > *MemtoReg, *RegWrite;
+	regT < bool > *Link, *MemtoReg, *RegWrite;
 
 	regT < sc_uint<32> > *PC;        // only for visualization purposes
 	regT < bool > *valid;            // only for visualization purposes
 
 	SC_CTOR(reg_mem_wb_t) {
+
+		PC4 = new regT < sc_uint<32> > ("pc4memwb");;
+		PC4->din(PC4_mem);
+		PC4->dout(PC4_wb);
+		PC4->clk(clk);
+		PC4->enable(enable);
+		PC4->reset(reset);
+
+		Link = new regT < bool >("Linkmemwb");
+		Link->din(Link_mem);
+		Link->dout(Link_wb);
+		Link->clk(clk);
+		Link->enable(enable);
+		Link->reset(reset);
 
 		aluOut = new regT < sc_uint<32> > ("aluOut");;
 		aluOut->din(aluOut_mem);

@@ -23,8 +23,11 @@ SC_MODULE(reg_exe_mem_t) {
 	sc_in  < bool > reset;
 	sc_in  < bool > enable;
 
-	sc_in  < sc_uint<32> > aluOut_exe, regb_exe, BranchTarget_exe;
-	sc_out < sc_uint<32> > aluOut_mem, regb_mem, BranchTarget_mem;
+	sc_in  < bool > Link_exe;
+	sc_out  < bool > Link_mem;
+
+	sc_in  < sc_uint<32> > aluOut_exe, regb_exe, BranchTarget_exe, PC4_exe;
+	sc_out < sc_uint<32> > aluOut_mem, regb_mem, BranchTarget_mem, PC4_mem;
 
 	sc_in  < sc_uint<5> > WriteReg_exe;
 	sc_out < sc_uint<5> > WriteReg_mem;
@@ -42,14 +45,28 @@ SC_MODULE(reg_exe_mem_t) {
 
 	// Modules
 
-	regT < sc_uint<32> > *aluOut, *regb, *BranchTarget;
+	regT < sc_uint<32> > *aluOut, *regb, *BranchTarget, *PC4;
 	regT < sc_uint<5> >  *WriteReg;
-	regT < bool > *MemRead, *MemWrite, *MemtoReg, *Branch, *Zero, *RegWrite;
+	regT < bool > *Link, *MemRead, *MemWrite, *MemtoReg, *Branch, *Zero, *RegWrite;
 
 	regT < sc_uint<32> > *PC;        // only for visualization purposes
 	regT < bool > *valid;            // only for visualization purposes
 
 	SC_CTOR(reg_exe_mem_t) {
+
+		PC4 = new regT < sc_uint<32> > ("pc4exemem");;
+		PC4->din(PC4_exe);
+		PC4->dout(PC4_mem);
+		PC4->clk(clk);
+		PC4->enable(enable);
+		PC4->reset(reset);
+
+		Link = new regT < bool >("linkexemem");
+		Link->din(Link_exe);
+		Link->dout(Link_mem);
+		Link->clk(clk);
+		Link->enable(enable);
+		Link->reset(reset);
 
 		aluOut = new regT < sc_uint<32> > ("aluOut");;
 		aluOut->din(aluOut_exe);
