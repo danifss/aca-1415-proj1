@@ -21,6 +21,9 @@ void control::entry()
 	    switch(funct.read()) {
 	       case 8:  JumpReg.write(1);
 	       			break;
+	       case 9:	JumpReg.write(1);
+	       			Link.write(1);
+	       			break;
 	       case 32: ALUOp.write(2);
 	                break;
 	       case 34: ALUOp.write(6);
