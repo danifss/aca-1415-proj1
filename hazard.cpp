@@ -14,31 +14,44 @@ void hazard::detect_hazard()
 
 		enable_pc.write(false);
 		enable_ifid.write(false);
+		reset_ifid.write(false);
 		reset_idexe.write(true);
+		reset_exemem.write(false);
 	}
 	else
 	{
 		
-
-		if( (BranchTaken.read() == true || Jump.read() == true || JumpReg.read() == true) && Link.read() == false ){
-			//enable_pc.write(false);
+		/*  se o branch for executado  */
+		if( BranchTaken.read() == true){
+			enable_pc.write(true);
+			enable_ifid.write(true);
+			reset_ifid.write(true);
+			reset_idexe.write(true);
+			reset_exemem.write(true);
+			
+			
+			
+		}
+		/*  se for um jump ou jump register  */
+		else if( (Jump.read() == true || JumpReg.read() == true) && Link.read() == false ){
+			enable_pc.write(true);
 			enable_ifid.write(false);
 			reset_ifid.write(true);
 			reset_idexe.write(true);
-			
-			
-			
+			reset_exemem.write(false);
+					
 		}
+		/*  se for um jal ou jalr  */
 		else if( (Jump.read() == true || JumpReg.read() == true) && Link.read() == true ){
-			//enable_pc.write(false);
+			enable_pc.write(true);
 			enable_ifid.write(false);
 			reset_ifid.write(true);
-			//reset_idexe.write(true);
-			
-			
-			
+			reset_idexe.write(false);
+			reset_exemem.write(false);
+					
 		}
-		else if(BranchTaken.read() == false){
+
+		else{
 			enable_pc.write(true);
 			enable_ifid.write(true);
 			reset_idexe.write(false);

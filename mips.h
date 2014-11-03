@@ -109,7 +109,7 @@ SC_MODULE(mips) {
 	sc_signal <bool> enable_ifid;
 
 	sc_signal <bool> reset_haz_ifid, reset_ifid;
-	
+	 
 
 	//ID
 	sc_signal < sc_uint<32> > inst_id,  // current instruction ID phase
