@@ -99,8 +99,8 @@ MIPSctrl::MIPSctrl( sc_signal<bool> &clock, sc_signal<bool> &rset, mips &m, QWid
 			            mips1.reg_id_exe->valid_exe,
 			            mips1.reg_exe_mem->PC_mem,
 			            mips1.reg_exe_mem->valid_mem,
-			            mips1.reg_mem_wb->PC_wb,
-			            mips1.reg_mem_wb->valid_wb,
+			            mips1.reg_mem2_wb->PC_wb,
+			            mips1.reg_mem2_wb->valid_wb,
 				    mdi);
 	imemview->setCaption( "InstMem" );
 

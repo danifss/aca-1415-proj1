@@ -221,6 +221,11 @@ void mips::buildMEM(void)
       
 }
 
+
+void mips::buildMEM2(void){
+
+}
+
 /**
  * buils WB stage components 
  */
@@ -335,14 +340,8 @@ void mips::buildArchitecture(void){
       reg_exe_mem->MemWrite_mem(MemWrite_mem);
       reg_exe_mem->MemtoReg_exe(MemtoReg_exe);
       reg_exe_mem->MemtoReg_mem(MemtoReg_mem);
-      reg_exe_mem->Branch_exe(Branch_exe);
-      reg_exe_mem->Branch_mem(Branch_mem);
       reg_exe_mem->RegWrite_exe(RegWrite_exe);
       reg_exe_mem->RegWrite_mem(RegWrite_mem);
-      reg_exe_mem->Zero_exe(Zero);
-      reg_exe_mem->Zero_mem(Zero_mem);
-      reg_exe_mem->BranchTarget_exe(BranchTarget);
-      reg_exe_mem->BranchTarget_mem(BranchTarget_mem);
       reg_exe_mem->regb_exe(regb_exe);
       reg_exe_mem->regb_mem(regb_mem);
       reg_exe_mem->WriteReg_exe(WriteReg_exe);
@@ -361,30 +360,53 @@ void mips::buildArchitecture(void){
       or_reset_exemem->dout(reset_exemem);
 
       buildMEM();
+
+      reg_mem_mem2 = new reg_mem_mem2_t("reg_mem_mem2");
+      reg_mem_mem2->PC4_mem(PC4_mem);
+      reg_mem_mem2->PC4_mem2(PC4_mem2);
+      reg_mem_mem2->Link_mem(Link_mem);
+      reg_mem_mem2->Link_mem2(Link_mem2);
+      reg_mem_mem2->aluOut_mem(ALUOut_mem);
+      reg_mem_mem2->aluOut_mem2(ALUOut_mem2);
+      reg_mem_mem2->MemtoReg_mem(MemtoReg_mem);
+      reg_mem_mem2->MemtoReg_mem2(MemtoReg_mem2);
+      reg_mem_mem2->RegWrite_mem(RegWrite_mem);
+      reg_mem_mem2->RegWrite_mem2(RegWrite_mem2);
+      reg_mem_mem2->WriteReg_mem(WriteReg_mem);
+      reg_mem_mem2->WriteReg_mem2(WriteReg_mem2);
+      reg_mem_mem2->PC_mem(PC_mem);
+      reg_mem_mem2->PC_mem2(PC_mem2);
+      reg_mem_mem2->valid_mem(valid_mem);
+      reg_mem_mem2->valid_mem2(valid_mem2);
+      reg_mem_mem2->clk(clk);
+      reg_mem_mem2->reset(reset);
+      reg_mem_mem2->enable(const1);
+
+      buildMEM2();
       
       //reg_mem_wb
-      reg_mem_wb = new reg_mem_wb_t("reg_mem_wb");
-      reg_mem_wb->PC4_mem(PC4_mem);
-      reg_mem_wb->PC4_wb(PC4_wb);
-      reg_mem_wb->Link_mem(Link_mem);
-      reg_mem_wb->Link_wb(Link_wb);
-      reg_mem_wb->aluOut_mem(ALUOut_mem);
-      reg_mem_wb->aluOut_wb(ALUOut_wb);
-      reg_mem_wb->memOut_mem(MemOut);
-      reg_mem_wb->memOut_wb(MemOut_wb);
-      reg_mem_wb->MemtoReg_mem(MemtoReg_mem);
-      reg_mem_wb->MemtoReg_wb(MemtoReg_wb);
-      reg_mem_wb->RegWrite_mem(RegWrite_mem);
-      reg_mem_wb->RegWrite_wb(RegWrite_wb);
-      reg_mem_wb->WriteReg_mem(WriteReg_mem);
-      reg_mem_wb->WriteReg_wb(WriteReg_wb);
-      reg_mem_wb->PC_mem(PC_mem);
-      reg_mem_wb->PC_wb(PC_wb);
-      reg_mem_wb->valid_mem(valid_mem);
-      reg_mem_wb->valid_wb(valid_wb);
-      reg_mem_wb->clk(clk);
-      reg_mem_wb->reset(reset);
-      reg_mem_wb->enable(const1);
+      reg_mem2_wb = new reg_mem2_wb_t("reg_mem_wb");
+      reg_mem2_wb->PC4_mem2(PC4_mem2);
+      reg_mem2_wb->PC4_wb(PC4_wb);
+      reg_mem2_wb->Link_mem2(Link_mem2);
+      reg_mem2_wb->Link_wb(Link_wb);
+      reg_mem2_wb->aluOut_mem2(ALUOut_mem2);
+      reg_mem2_wb->aluOut_wb(ALUOut_wb);
+      reg_mem2_wb->memOut_mem2(MemOut);
+      reg_mem2_wb->memOut_wb(MemOut_wb);
+      reg_mem2_wb->MemtoReg_mem2(MemtoReg_mem2);
+      reg_mem2_wb->MemtoReg_wb(MemtoReg_wb);
+      reg_mem2_wb->RegWrite_mem2(RegWrite_mem2);
+      reg_mem2_wb->RegWrite_wb(RegWrite_wb);
+      reg_mem2_wb->WriteReg_mem2(WriteReg_mem2);
+      reg_mem2_wb->WriteReg_wb(WriteReg_wb);
+      reg_mem2_wb->PC_mem2(PC_mem2);
+      reg_mem2_wb->PC_wb(PC_wb);
+      reg_mem2_wb->valid_mem2(valid_mem2);
+      reg_mem2_wb->valid_wb(valid_wb);
+      reg_mem2_wb->clk(clk);
+      reg_mem2_wb->reset(reset);
+      reg_mem2_wb->enable(const1);
 
       buildWB();
 
@@ -395,6 +417,8 @@ void mips::buildArchitecture(void){
       hazard_unit->RegWrite_exe(RegWrite_exe);
       hazard_unit->WriteReg_mem(WriteReg_mem);
       hazard_unit->RegWrite_mem(RegWrite_mem);
+      hazard_unit->WriteReg_mem2(WriteReg_mem2);
+      hazard_unit->RegWrite_mem2(RegWrite_mem2);
       hazard_unit->enable_pc(enable_pc);
       hazard_unit->enable_ifid(enable_ifid);
       hazard_unit->reset_idexe(reset_haz_idexe);
@@ -432,5 +456,6 @@ mips::~mips(void)
       delete reg_if_id;
       delete reg_id_exe;
       delete reg_exe_mem;
-      delete reg_mem_wb;
+      delete reg_mem_mem2;
+      delete reg_mem2_wb;
 }

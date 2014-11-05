@@ -30,8 +30,8 @@ SC_MODULE( hazard )
   public: 
     sc_in< sc_uint<5> >  rs;
     sc_in< sc_uint<5> >  rt;        
-    sc_in< sc_uint<5> >  WriteReg_exe, WriteReg_mem;        
-    sc_in< bool > RegWrite_exe, RegWrite_mem;        
+    sc_in< sc_uint<5> >  WriteReg_exe, WriteReg_mem, WriteReg_mem2;        
+    sc_in< bool > RegWrite_exe, RegWrite_mem, RegWrite_mem2;        
 	sc_in< bool > MemRead;
 	sc_in< bool > BranchTaken;
     sc_in< bool > Jump;
@@ -46,6 +46,7 @@ SC_MODULE( hazard )
         sensitive << rs << rt 
 		  << WriteReg_exe << RegWrite_exe
 		  << WriteReg_mem << RegWrite_mem
+          << WriteReg_mem2 << RegWrite_mem2
 			<< MemRead
 			<< BranchTaken << Jump << JumpReg << Link;
    }
