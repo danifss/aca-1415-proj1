@@ -2,7 +2,7 @@
 #include "hazard.h"
 
 /**
- * Callback for the hazrd detection of \c hazard module.
+ * Callback for the hazard detection of \c hazard module.
  */
 void hazard::detect_hazard()
 {
