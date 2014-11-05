@@ -32,7 +32,8 @@
 #include "reg_if_id.h"
 #include "reg_id_exe.h"
 #include "reg_exe_mem.h"
-#include "reg_mem_wb.h"
+#include "reg_mem_mem2.h"
+#include "reg_mem2_wb.h"
 #include "compare.h"
 
 /**
@@ -95,7 +96,8 @@ SC_MODULE(mips) {
 	reg_if_id_t       *reg_if_id;
 	reg_id_exe_t      *reg_id_exe;
 	reg_exe_mem_t     *reg_exe_mem;
-	reg_mem_wb_t      *reg_mem_wb;
+	reg_mem_mem2_t     *reg_mem_mem2;
+	reg_mem2_wb_t      *reg_mem2_wb;
 
 	// Signals
 
@@ -181,16 +183,16 @@ SC_MODULE(mips) {
 
 	//MEM
 	sc_signal < sc_uint<32> > MemOut;   // data memory output
-	sc_signal < sc_uint<32> > ALUOut_mem, BranchTarget_mem, PC4_mem;   
-	sc_signal < sc_uint<5> > WriteReg_mem;   
-	sc_signal <bool> MemRead_mem, MemWrite_mem, MemtoReg_mem;
-	sc_signal <bool> RegWrite_mem;
-	sc_signal <bool> Branch_mem, Zero_mem, Link_mem;
+	sc_signal < sc_uint<32> > ALUOut_mem, ALUOut_mem2, BranchTarget_mem, PC4_mem, PC4_mem2;   
+	sc_signal < sc_uint<5> > WriteReg_mem, WriteReg_mem2;   
+	sc_signal <bool> MemRead_mem, MemWrite_mem, MemtoReg_mem, MemtoReg_mem2;
+	sc_signal <bool> RegWrite_mem, RegWrite_mem2;
+	sc_signal <bool> Branch_mem, Zero_mem, Link_mem, Link_mem2;
 
 	// the following two signals are not used by the architecture
 	// they are used only for visualization purposes
-	sc_signal < sc_uint<32> > PC_mem;   
-	sc_signal < bool > valid_mem;
+	sc_signal < sc_uint<32> > PC_mem, PC_mem2;   
+	sc_signal < bool > valid_mem, valid_mem2;
 
 	//WB
 	sc_signal < sc_uint<32> > MemOut_wb, ALUOut_wb, PC4_wb;   
@@ -223,6 +225,7 @@ SC_MODULE(mips) {
 	void buildID();
 	void buildEXE();
 	void buildMEM();
+	void buildMEM2();
 	void buildWB();
 };
 

@@ -75,8 +75,8 @@ MIPSarchCanvas::MIPSarchCanvas(mips &m, QObject *parent) : Q3Canvas(parent), mip
     qText->move(800,6);
     qText->setColor(QColor("red"));
     instStage.push_back(qText);
-    pcStage.push_back(new PortValRead(mips1.reg_mem_wb->PC_wb,"PC_wb"));
-    validpcStage.push_back(new PortValRead(mips1.reg_mem_wb->valid_wb,"valid_PC_wb"));
+    pcStage.push_back(new PortValRead(mips1.reg_mem2_wb->PC_wb,"PC_wb"));
+    validpcStage.push_back(new PortValRead(mips1.reg_mem2_wb->valid_wb,"valid_PC_wb"));
 
     // value of port signals
     // IF
@@ -295,21 +295,22 @@ MIPSarchCanvas::MIPSarchCanvas(mips &m, QObject *parent) : Q3Canvas(parent), mip
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
 
+    /*
     portVal=new PortValItem(this,mips1.reg_exe_mem->Branch_mem, "Branch_mem");
     portVal->move(652,78);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
-
+    */
     portVal=new PortValItem(this,mips1.reg_exe_mem->MemRead_mem, "MemRead_mem");
     portVal->move(652,90);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
 
-    portVal=new PortValItem(this,mips1.reg_exe_mem->MemWrite_mem, "MemWrite_mem");
+    /*portVal=new PortValItem(this,mips1.reg_exe_mem->MemWrite_mem, "MemWrite_mem");
     portVal->move(652,102);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
-
+    */
     portVal=new PortValItem(this,mips1.reg_exe_mem->aluOut_mem, "aluOut_mem");
     portVal->move(652,250);
     portVal->setColor(QColor("blue"));
@@ -329,45 +330,49 @@ MIPSarchCanvas::MIPSarchCanvas(mips &m, QObject *parent) : Q3Canvas(parent), mip
     portVal->move(758,300);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
-
+    /*
     portVal=new PortValItem(this,mips1.reg_exe_mem->Zero_mem, "Zero_mem");
     portVal->move(663,205);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
+    */
 
+    /*
     portVal=new PortValItem(this,mips1.a1->dout, "BranchTaken");
     portVal->move(449,3);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
+    */
 
+    /*
     portVal=new PortValItem(this,mips1.reg_exe_mem->BranchTarget_mem, "BranchTarget_mem");
     portVal->move(485,24);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
-
+    */
     //WB
     
-    portVal=new PortValItem(this,mips1.reg_mem_wb->memOut_wb, "memOut_wb");
+    portVal=new PortValItem(this,mips1.reg_mem2_wb->memOut_wb, "memOut_wb");
     portVal->move(806,290);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
 
-    portVal=new PortValItem(this,mips1.reg_mem_wb->aluOut_wb, "aluOut_wb");
+    portVal=new PortValItem(this,mips1.reg_mem2_wb->aluOut_wb, "aluOut_wb");
     portVal->move(806,328);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
 
-    portVal=new PortValItem(this,mips1.reg_mem_wb->MemtoReg_wb, "MemtoReg_wb");
+    portVal=new PortValItem(this,mips1.reg_mem2_wb->MemtoReg_wb, "MemtoReg_wb");
     portVal->move(806,63);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
 
-    portVal=new PortValItem(this,mips1.reg_mem_wb->WriteReg_wb, "WriteReg_wb");
+    portVal=new PortValItem(this,mips1.reg_mem2_wb->WriteReg_wb, "WriteReg_wb");
     portVal->move(612,417);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
 
-    portVal=new PortValItem(this,mips1.reg_mem_wb->RegWrite_wb, "RegWrite_wb");
+    portVal=new PortValItem(this,mips1.reg_mem2_wb->RegWrite_wb, "RegWrite_wb");
     portVal->move(612,395);
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
