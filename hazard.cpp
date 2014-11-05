@@ -27,7 +27,7 @@ void hazard::detect_hazard()
 			enable_ifid.write(true);
 			reset_ifid.write(true);
 			reset_idexe.write(true);
-			reset_exemem.write(true);
+			reset_exemem.write(false);
 			
 			
 			
