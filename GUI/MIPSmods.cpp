@@ -23,8 +23,8 @@ MIPSmods::MIPSmods( mips &m, QWidget* parent,  const char* name, Qt::WFlags fl )
     //resize viewport
     resizeContents(820+5,194+5);
 
-    resize( QSize(820+10,194+10) ); 
-    setMaximumSize( QSize(820+10,194+10) ); 
+    resize( QSize(820+10,220+10) ); 
+    setMaximumSize( QSize(820+10,225+10) ); 
 
     setIcon(QPixmap("mips.xpm"));
 
@@ -45,6 +45,9 @@ MIPSmods::MIPSmods( mips &m, QWidget* parent,  const char* name, Qt::WFlags fl )
     ctrlView->addPort(mips1.ctrl->funct,   "funct");
     ctrlView->addPort(mips1.ctrl->RegDst,  "RegDst");
     ctrlView->addPort(mips1.ctrl->Branch,  "Branch");
+    ctrlView->addPort(mips1.ctrl->Jump,    "Jump");
+    ctrlView->addPort(mips1.ctrl->JumpReg, "JumpReg");
+    ctrlView->addPort(mips1.ctrl->Link,    "JumpAndLink");
     ctrlView->addPort(mips1.ctrl->MemRead, "MemRead");
     ctrlView->addPort(mips1.ctrl->MemWrite,"MemWrite");
     ctrlView->addPort(mips1.ctrl->MemtoReg,"MemtoReg");

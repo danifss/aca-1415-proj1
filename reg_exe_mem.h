@@ -35,17 +35,21 @@ SC_MODULE(reg_exe_mem_t) {
 	sc_in  < bool > MemRead_exe, MemWrite_exe, MemtoReg_exe, RegWrite_exe;
 	sc_out < bool > MemRead_mem, MemWrite_mem, MemtoReg_mem, RegWrite_mem;
 
+	sc_in  < bool > Branch_exe;
+	sc_out < bool > Branch_mem;
 
 	sc_in  < sc_uint<32> > PC_exe;   // only for visualization purposes
 	sc_out < sc_uint<32> > PC_mem;   // only for visualization purposes
 	sc_in  < bool > valid_exe;       // only for visualization purposes
 	sc_out < bool > valid_mem;       // only for visualization purposes
+	sc_in  < sc_uint<32> > BranchTarget_exe;   // only for visualization purposes
+	sc_out < sc_uint<32> > BranchTarget_mem;   // only for visualization purposes
 
 	// Modules
 
-	regT < sc_uint<32> > *aluOut, *regb, *PC4;
+	regT < sc_uint<32> > *aluOut, *regb, *PC4, *BranchTarget;
 	regT < sc_uint<5> >  *WriteReg;
-	regT < bool > *Link, *MemRead, *MemWrite, *MemtoReg, *RegWrite;
+	regT < bool > *Link, *MemRead, *MemWrite, *MemtoReg, *RegWrite, *Branch;
 
 	regT < sc_uint<32> > *PC;        // only for visualization purposes
 	regT < bool > *valid;            // only for visualization purposes
@@ -65,6 +69,14 @@ SC_MODULE(reg_exe_mem_t) {
 		Link->clk(clk);
 		Link->enable(enable);
 		Link->reset(reset);
+
+		// Visualization purposes
+		BranchTarget = new regT < sc_uint<32> > ("BranchTarget");;
+		BranchTarget->din(BranchTarget_exe);
+		BranchTarget->dout(BranchTarget_mem);
+		BranchTarget->clk(clk);
+		BranchTarget->enable(enable);
+		BranchTarget->reset(reset);
 
 		aluOut = new regT < sc_uint<32> > ("aluOut");;
 		aluOut->din(aluOut_exe);
@@ -108,6 +120,14 @@ SC_MODULE(reg_exe_mem_t) {
 		MemtoReg->enable(enable);
 		MemtoReg->reset(reset);
 
+		// Visualization purposes
+		Branch = new regT < bool >("Branch");
+		Branch->din(Branch_exe);
+		Branch->dout(Branch_mem);
+		Branch->clk(clk);
+		Branch->enable(enable);
+		Branch->reset(reset);
+
 		RegWrite = new regT < bool >("RegWrite");
 		RegWrite->din(RegWrite_exe);
 		RegWrite->dout(RegWrite_mem);
@@ -115,7 +135,7 @@ SC_MODULE(reg_exe_mem_t) {
 		RegWrite->enable(enable);
 		RegWrite->reset(reset);
 
-		// Visualization only
+		// Visualization purposes
 		PC = new regT < sc_uint<32> > ("PC");;
 		PC->din(PC_exe);
 		PC->dout(PC_mem);
