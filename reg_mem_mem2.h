@@ -32,10 +32,12 @@ SC_MODULE(reg_mem_mem2_t) {
     sc_in  < bool > MemtoReg_mem, RegWrite_mem;
     sc_out < bool > MemtoReg_mem2, RegWrite_mem2;
 
-    sc_in  < sc_uint<32> > PC_mem;   // only for visualization purposes
+    sc_in  < sc_uint<32> > PC_mem;    // only for visualization purposes
     sc_out < sc_uint<32> > PC_mem2;   // only for visualization purposes
-    sc_in  < bool > valid_mem;       // only for visualization purposes
+    sc_in  < bool > valid_mem;        // only for visualization purposes
     sc_out < bool > valid_mem2;       // only for visualization purposes
+    sc_in  < bool > Branch_mem;       // only for visualization purposes
+    sc_out < bool > Branch_mem2;      // only for visualization purposes
 
     // Modules
 
@@ -44,7 +46,7 @@ SC_MODULE(reg_mem_mem2_t) {
     regT < bool > *MemtoReg, *RegWrite, *Link;
 
     regT < sc_uint<32> > *PC;        // only for visualization purposes
-    regT < bool > *valid;            // only for visualization purposes
+    regT < bool > *valid, *Branch;   // only for visualization purposes
 
     SC_CTOR(reg_mem_mem2_t) {
 
@@ -82,6 +84,14 @@ SC_MODULE(reg_mem_mem2_t) {
         MemtoReg->clk(clk);
         MemtoReg->enable(enable);
         MemtoReg->reset(reset);
+        
+        // Visualization purposes
+        Branch = new regT < bool >("Branch");
+        Branch->din(Branch_mem);
+        Branch->dout(Branch_mem2);
+        Branch->clk(clk);
+        Branch->enable(enable);
+        Branch->reset(reset);
 
         RegWrite = new regT < bool >("RegWrite");
         RegWrite->din(RegWrite_mem);
@@ -90,6 +100,7 @@ SC_MODULE(reg_mem_mem2_t) {
         RegWrite->enable(enable);
         RegWrite->reset(reset);
 
+        // Visualization purposes
         PC = new regT < sc_uint<32> > ("PC");;
         PC->din(PC_mem);
         PC->dout(PC_mem2);
