@@ -43,7 +43,7 @@ void control::entry()
 	    MemRead.write(0);
 	    MemWrite.write(0);
 	    Branch.write(0);
-	    BranchType.write(0);	//BEQ
+	    BranchType.write(0);
 	    Jump.write(1);
 	    JumpReg.write(0);
 	    Link.write(0);
@@ -55,7 +55,7 @@ void control::entry()
 	    MemRead.write(0);
 	    MemWrite.write(0);
 	    Branch.write(0);
-	    BranchType.write(0);	//BEQ
+	    BranchType.write(0);
 	    Jump.write(1);
 	    JumpReg.write(0);
 	    Link.write(1);
