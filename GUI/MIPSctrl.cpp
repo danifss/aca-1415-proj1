@@ -215,7 +215,7 @@ MIPSctrl::MIPSctrl( sc_signal<bool> &clock, sc_signal<bool> &rset, mips &m, QWid
 
 	setCentralWidget( mdi );
 
-	resize(900,500);
+	resize(1366,768); // resize(900,500);
 }
 
 /*  
@@ -324,10 +324,10 @@ void MIPSctrl::windowsMenuAboutToShow()
     windowsMenu->insertSeparator();
     QWidgetList windows = mdi->windowList();
     for ( int i = 0; i < int(windows.count()); ++i ) {
-	int id = windowsMenu->insertItem(windows.at(i)->caption(),
-					 this, SLOT( windowsMenuActivated( int ) ) );
-	windowsMenu->setItemParameter( id, i );
-	windowsMenu->setItemChecked( id, mdi->activeWindow() == windows.at(i) );
+		int id = windowsMenu->insertItem(windows.at(i)->caption(),
+						 this, SLOT( windowsMenuActivated( int ) ) );
+		windowsMenu->setItemParameter( id, i );
+		windowsMenu->setItemChecked( id, mdi->activeWindow() == windows.at(i) );
     }
 }
 
@@ -335,8 +335,8 @@ void MIPSctrl::windowsMenuActivated( int id )
 {
     QWidget* w = mdi->windowList().at( id );
     if ( w ) {
-	if(!w->isVisible()) w->show();
-	w->setFocus();
+		if(!w->isVisible()) w->show();
+		w->setFocus();
     }
 }
 
