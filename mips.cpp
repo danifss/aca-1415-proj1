@@ -146,8 +146,6 @@ void mips::buildID(void) {
 
     // Jump and Link
 
-
-
     // Adds Branch Immediate to Program Counter + 4
     addbr = new add("addbr");
 
@@ -172,7 +170,6 @@ void mips::buildID(void) {
     a1->din2(res_comp);
     a1->dout(BranchTaken);
 
-
 }
 
 /**
@@ -196,8 +193,6 @@ void mips::buildEXE(void) {
     alu1->dout(ALUOut);
     alu1->zero(Zero);
 
-
-
 }
 
 /**
@@ -218,7 +213,7 @@ void mips::buildMEM(void) {
 }
 
 void mips::buildMEM2(void) {
-
+    // nada a fazer aqui :)
 }
 
 /**
@@ -239,8 +234,6 @@ void mips::buildWB(void) {
     muxlinkval->din0(WriteVal_prev);
     muxlinkval->din1(PC4_wb);
     muxlinkval->dout(WriteVal);
-
-
 
 }
 
