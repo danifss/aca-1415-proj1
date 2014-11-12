@@ -75,14 +75,14 @@ SC_MODULE(mips) {
 	compare *comp;
 	orbitwise *jumpT;
 	andbitwise *pc4bitms;
+	shiftl2 *sl2;                 // shift left 2 imm_ext
+	add *addbr;                   // adds imm to PC + 4
 	muxl< sc_uint<5> > *link;
-	mux< sc_uint<32> > *muxlinkval;
+
 
 	//EXE
 	alu               *alu1;      // ALU
 	mux< sc_uint<32> > *m1;       // selects 2nd ALU operand
-	shiftl2 *sl2;                 // shift left 2 imm_ext
-	add *addbr;                   // adds imm to PC + 4
 	orgate *or_reset_exemem;
 
 	//MEM
@@ -90,7 +90,9 @@ SC_MODULE(mips) {
 	andgate *a1;                  // beq instruction and equal values
 
 	//WB
-	mux< sc_uint<32> > *m2;       // selects value to write in register (ALUout or MemOut)
+//	mux< sc_uint<32> > *m2;       // selects value to write in register (ALUout or MemOut)
+//	mux< sc_uint<32> > *muxlinkval;
+	muxj< sc_uint<32> > *m3;      // selects value to write in register (ALUout or MemOut or PC4_wb)
 
 	//pipeline registers
 	reg_if_id_t       *reg_if_id;

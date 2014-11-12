@@ -26,14 +26,12 @@ void mips::buildIF(void) {
 
     // Adds 4 to Program Counter
     add4 = new add("add4");
-
     add4->op1(PC);
     add4->op2(const4);
     add4->res(PC4);
 
     // Selects Next Program Counter Value
     mPC = new muxj< sc_uint < 32 > > ("mPC");
-
     mPC->sel(BranchTaken);
     mPC->selj(Jump);
     mPC->din0(PC4);
@@ -212,6 +210,9 @@ void mips::buildMEM(void) {
 
 }
 
+/**
+ * buils MEM2 stage components 
+ */
 void mips::buildMEM2(void) {
     // nada a fazer aqui :)
 }
@@ -221,20 +222,26 @@ void mips::buildMEM2(void) {
  */
 void mips::buildWB(void) {
     // Selects Result
-    m2 = new mux< sc_uint < 32 > > ("muxRes");
+    // m2 = new mux< sc_uint < 32 > > ("muxRes");
+    // m2->sel(MemtoReg_wb);
+    // m2->din0(ALUOut_wb);
+    // m2->din1(MemOut_wb);
+    // m2->dout(WriteVal_prev);
 
-    m2->sel(MemtoReg_wb);
-    m2->din0(ALUOut_wb);
-    m2->din1(MemOut_wb);
-    m2->dout(WriteVal_prev);
+    // muxlinkval = new mux< sc_uint < 32 > > ("muxlinkval");
+    // muxlinkval->sel(Link_wb);
+    // muxlinkval->din0(WriteVal_prev);
+    // muxlinkval->din1(PC4_wb);
+    // muxlinkval->dout(WriteVal);
 
-    muxlinkval = new mux< sc_uint < 32 > > ("muxlinkval");
-
-    muxlinkval->sel(Link_wb);
-    muxlinkval->din0(WriteVal_prev);
-    muxlinkval->din1(PC4_wb);
-    muxlinkval->dout(WriteVal);
-
+    //Selects Result
+    m3 = new muxj< sc_uint<32> > ("muxRes");
+    m3->selj(Link_wb);     // MSB
+    m3->sel(MemtoReg_wb);  // LSB
+    m3->din0(ALUOut_wb);   // valor da ALU
+    m3->din1(MemOut_wb);   // valor da MEM
+    m3->dinj(PC4_wb);      // valor PC+4
+    m3->dout(WriteVal);
 }
 
 /**
@@ -428,23 +435,31 @@ mips::~mips(void) {
     delete PCreg;
     delete instmem;
     delete add4;
-    delete addbr;
-    delete a1;
     delete mPC;
     delete dec1;
     delete mr;
+    delete link;
     delete rfile;
     delete e1;
+    delete ctrl;
     delete sl2;
+    delete pc4bitms;
+    delete jumpT;
+    delete jumpM;
+    delete addbr;
+    delete comp;
+    delete a1;
     delete m1;
     delete alu1;
     delete datamem;
-    delete m2;
-    delete ctrl;
-    delete comp;
+    delete m3;
+//    delete m2;
+//    delete muxlinkval;
 
     delete hazard_unit;
+    delete or_reset_ifid;
     delete or_reset_idexe;
+    delete or_reset_exemem;
     delete reg_if_id;
     delete reg_id_exe;
     delete reg_exe_mem;
