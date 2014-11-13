@@ -8,7 +8,7 @@ void control::entry()
 {
   switch(opcode.read()) {
     case 0: // R-format
-        RegDst.write(1);  
+        RegDst.write(1);
         ALUSrc.write(0);
 	    MemtoReg.write(0);
 	    RegWrite.write(1);
@@ -86,7 +86,7 @@ void control::entry()
 	    ALUOp.write(6);
 	    break;
     case 35: // lw
-        RegDst.write(0); 
+        RegDst.write(0);
         ALUSrc.write(1);
 	    MemtoReg.write(1);
 	    RegWrite.write(1);
@@ -99,7 +99,7 @@ void control::entry()
 	    ALUOp.write(2);
 	    break;
     case 43: // sw
-            ALUSrc.write(1);
+        ALUSrc.write(1);
 	    RegWrite.write(0);
 	    MemRead.write(0);
 	    MemWrite.write(1);

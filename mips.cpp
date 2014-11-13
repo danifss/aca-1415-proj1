@@ -57,7 +57,6 @@ void mips::buildID(void) {
 
     // Selects Register to Write
     mr = new mux< sc_uint < 5 > > ("muxRDst");
-
     mr->sel(RegDst);
     mr->din0(rt);
     mr->din1(rd);
@@ -66,7 +65,6 @@ void mips::buildID(void) {
 
     // If jal selects reg31 to write
     link = new muxl< sc_uint < 5 > > ("muxJal");
-
     link->sel(Link);
     link->din0(WriteReg_prev);
     link->dout(WriteReg);
@@ -117,18 +115,14 @@ void mips::buildID(void) {
     sl2->dout(addr_ext);
 
 
-
     // obter 4 bits mais significativos do PC+4
     pc4bitms = new andbitwise("pc4bitms");
-
     pc4bitms->din1(PC4_id);
-    //pc4bitms->din2(0xF0000000);
     pc4bitms->dout(PC4_id_4bitms);
 
 
     // (pc+4) | addr_ext
     jumpT = new orbitwise("pc4addr");
-
     jumpT->din1(PC4_id_4bitms);
     jumpT->din2(addr_ext);
     jumpT->dout(JumpTarget);
@@ -136,7 +130,6 @@ void mips::buildID(void) {
 
     // Jump Register
     jumpM = new mux< sc_uint < 32 > > ("muxJump");
-
     jumpM->sel(JumpReg);
     jumpM->din0(NPC_prev);
     jumpM->din1(regdata1);
@@ -146,7 +139,6 @@ void mips::buildID(void) {
 
     // Adds Branch Immediate to Program Counter + 4
     addbr = new add("addbr");
-
     addbr->op1(PC4_id);
     addbr->op2(addr_ext);
     addbr->res(BranchTarget);
@@ -154,7 +146,6 @@ void mips::buildID(void) {
 
     // Comparator
     comp = new compare("comp");
-
     comp->op1(regdata1);
     comp->op2(regdata2);
     comp->opt(BranchType);
@@ -163,7 +154,6 @@ void mips::buildID(void) {
 
     // Enables Branch
     a1 = new andgate("a1");
-
     a1->din1(Branch);
     a1->din2(res_comp);
     a1->dout(BranchTaken);
@@ -176,7 +166,6 @@ void mips::buildID(void) {
 void mips::buildEXE(void) {
     // Selects second operand of ALU
     m1 = new mux< sc_uint < 32 > > ("muxOp");
-
     m1->sel(ALUSrc_exe);
     m1->din0(regb_exe);
     m1->din1(imm_exe);
@@ -184,13 +173,18 @@ void mips::buildEXE(void) {
 
     // ALU
     alu1 = new alu("alu");
-
     alu1->din1(rega_exe);
     alu1->din2(ALUIn2);
     alu1->op(ALUOp_exe);
     alu1->dout(ALUOut);
     alu1->zero(Zero);
 
+    // selects RS or RT for destination register
+    mux_rsrt = new mux< sc_uint<5> > ("mux_rsrt");
+    mux_rsrt->sel(RegDst_exe);
+    mux_rsrt->din0(rt_exe);
+    mux_rsrt->din1(rd_exe);
+    mux_rsrt->dout(WriteReg_exe);
 }
 
 /**
@@ -286,10 +280,16 @@ void mips::buildArchitecture(void) {
     reg_id_exe->regb_exe(regb_exe);
     reg_id_exe->imm_id(imm_ext);
     reg_id_exe->imm_exe(imm_exe);
+    reg_id_exe->rs_id(rs);
+    reg_id_exe->rs_exe(rs_exe);
+    reg_id_exe->rt_id(rt);
+    reg_id_exe->rt_exe(rt_exe);
+    reg_id_exe->rd_id(rd);
+    reg_id_exe->rd_exe(rd_exe);
     reg_id_exe->PC4_id(PC4_id);
     reg_id_exe->PC4_exe(PC4_exe);
-    reg_id_exe->WriteReg_id(WriteReg);
-    reg_id_exe->WriteReg_exe(WriteReg_exe);
+//    reg_id_exe->WriteReg_id(WriteReg);
+//    reg_id_exe->WriteReg_exe(WriteReg_exe);
     reg_id_exe->MemRead_id(MemRead);
     reg_id_exe->MemRead_exe(MemRead_exe);
     reg_id_exe->MemWrite_id(MemWrite);
@@ -304,6 +304,8 @@ void mips::buildArchitecture(void) {
     reg_id_exe->ALUSrc_exe(ALUSrc_exe);
     reg_id_exe->ALUOp_id(ALUOp);
     reg_id_exe->ALUOp_exe(ALUOp_exe);
+    reg_id_exe->RegDst_id(RegDst);
+    reg_id_exe->RegDst_exe(RegDst_exe);
     reg_id_exe->PC_id(PC_id);
     reg_id_exe->PC_exe(PC_exe);
     reg_id_exe->valid_id(valid_id);
@@ -451,6 +453,7 @@ mips::~mips(void) {
     delete a1;
     delete m1;
     delete alu1;
+    delete mux_rsrt;
     delete datamem;
     delete m3;
 //    delete m2;
