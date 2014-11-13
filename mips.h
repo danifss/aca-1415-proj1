@@ -83,6 +83,7 @@ SC_MODULE(mips) {
 	//EXE
 	alu               *alu1;      // ALU
 	mux< sc_uint<32> > *m1;       // selects 2nd ALU operand
+	mux< sc_uint<5> > *mux_rsrt;  // selects rs or rt to RDD
 	orgate *or_reset_exemem;
 
 	//MEM
@@ -98,8 +99,8 @@ SC_MODULE(mips) {
 	reg_if_id_t       *reg_if_id;
 	reg_id_exe_t      *reg_id_exe;
 	reg_exe_mem_t     *reg_exe_mem;
-	reg_mem_mem2_t     *reg_mem_mem2;
-	reg_mem2_wb_t      *reg_mem2_wb;
+	reg_mem_mem2_t    *reg_mem_mem2;
+	reg_mem2_wb_t     *reg_mem2_wb;
 
 	// Signals
 
@@ -109,9 +110,7 @@ SC_MODULE(mips) {
 						PC4;      // PC + 4
 	sc_signal < sc_uint<32> > inst;     // current instruction
 	sc_signal <bool> enable_pc;
-
 	sc_signal <bool> enable_ifid;
-
 	sc_signal <bool> reset_haz_ifid, reset_ifid;
 	 
 
@@ -133,10 +132,8 @@ SC_MODULE(mips) {
 	sc_signal < sc_uint<5> > WriteReg_prev;  // register to write
 	sc_signal < sc_uint<5> > WriteReg;  // register to write
 
-
 	sc_signal < sc_uint<32> > regdata1, // value of register rs
 						regdata2, // value of regiter rt
-						WriteVal_prev,
 						WriteVal; // value to write in register WriteReg
 
 	sc_signal < sc_uint<32> > imm_ext;  // imm sign extended
@@ -144,7 +141,6 @@ SC_MODULE(mips) {
 	sc_signal < sc_uint<32> > rega_exe, // value of register rs EXE phase
 						regb_exe, // value of regiter rt EXE phase
 						regb_mem; // value of regiter rt MEM phase
-
 
 	sc_signal <bool> reset_haz_idexe, reset_idexe;
 	// control signals
@@ -165,14 +161,14 @@ SC_MODULE(mips) {
 
 	//EXE
 	sc_signal < sc_uint<32> > imm_exe, PC4_exe;
-	
-	sc_signal < sc_uint<5> > WriteReg_exe;
+	sc_signal < sc_uint<5> > rs_exe, rt_exe, rd_exe;
+	sc_signal < sc_uint<5> > WriteReg_exe; // Register to be written
 	sc_signal <bool> Zero, Link_exe;
 	// ALU signals
 	sc_signal < sc_uint<32> > ALUIn2,   // ALU second operand
 						ALUOut;   // ALU Output
 	sc_signal <bool> MemRead_exe, MemWrite_exe, MemtoReg_exe;
-	sc_signal <bool> RegWrite_exe;
+	sc_signal <bool> RegWrite_exe, RegDst_exe;
 	sc_signal <bool> ALUSrc_exe;
 	sc_signal < sc_uint<3> > ALUOp_exe;
 	sc_signal <bool> reset_haz_exemem, reset_exemem;

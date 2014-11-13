@@ -29,11 +29,14 @@ SC_MODULE(reg_id_exe_t) {
 	sc_in  < sc_uint<32> > rega_id, regb_id, imm_id, PC4_id;
 	sc_out < sc_uint<32> > rega_exe, regb_exe, imm_exe, PC4_exe;
 
-	sc_in  < sc_uint<5> > WriteReg_id;
-	sc_out < sc_uint<5> > WriteReg_exe;
+	sc_in  < sc_uint<5> > rs_id, rt_id, rd_id;       // signals to propagate rs, rt, and rd values
+	sc_out < sc_uint<5> > rs_exe, rt_exe, rd_exe;    // signals to propagate rs, rt, and rd values
 
-	sc_in  < bool > MemRead_id, MemWrite_id, MemtoReg_id; 
-	sc_out < bool > MemRead_exe, MemWrite_exe, MemtoReg_exe; 
+//	sc_in  < sc_uint<5> > WriteReg_id;
+//	sc_out < sc_uint<5> > WriteReg_exe;
+
+	sc_in  < bool > MemRead_id, MemWrite_id, MemtoReg_id, RegDst_id;
+	sc_out < bool > MemRead_exe, MemWrite_exe, MemtoReg_exe, RegDst_exe;
 
 	sc_in  < bool > Branch_id, ALUSrc_id, RegWrite_id;
 	sc_out < bool > Branch_exe, ALUSrc_exe, RegWrite_exe;
@@ -49,8 +52,10 @@ SC_MODULE(reg_id_exe_t) {
 	// Modules
 	
 	regT < sc_uint<32> > *rega,*regb,*imm,*PC4;
-	regT < bool > *Link, *MemRead, *MemWrite, *MemtoReg, *Branch, *RegWrite, *ALUSrc; 
-	regT < sc_uint<5> > *WriteReg;
+	regT < sc_uint<5> > *rs, *rt, *rd;
+	regT < bool > *Link, *MemRead, *MemWrite, *MemtoReg, *Branch,
+				*RegWrite, *ALUSrc, *RegDst;
+//	regT < sc_uint<5> > *WriteReg;
 	regT < sc_uint<3> > *ALUOp;
 
 	regT < sc_uint<32> > *PC;      // only for visualization purposes
@@ -80,12 +85,40 @@ SC_MODULE(reg_id_exe_t) {
 		regb->enable(enable);
 		regb->reset(reset);
 
-		WriteReg = new regT < sc_uint<5> >("WriteReg");
-		WriteReg->din(WriteReg_id);
-		WriteReg->dout(WriteReg_exe);
-		WriteReg->clk(clk);
-		WriteReg->enable(enable);
-		WriteReg->reset(reset);
+		rs = new regT < sc_uint<5> > ("rs");
+		rs->din(rs_id);
+		rs->dout(rs_exe);
+		rs->clk(clk);
+		rs->enable(enable);
+		rs->reset(reset);
+
+		rt = new regT < sc_uint<5> > ("rt");
+		rt->din(rt_id);
+		rt->dout(rt_exe);
+		rt->clk(clk);
+		rt->enable(enable);
+		rt->reset(reset);
+
+		rd = new regT < sc_uint<5> > ("rd");
+		rd->din(rd_id);
+		rd->dout(rd_exe);
+		rd->clk(clk);
+		rd->enable(enable);
+		rd->reset(reset);
+
+		// WriteReg = new regT < sc_uint<5> >("WriteReg");
+		// WriteReg->din(WriteReg_id);
+		// WriteReg->dout(WriteReg_exe);
+		// WriteReg->clk(clk);
+		// WriteReg->enable(enable);
+		// WriteReg->reset(reset);
+
+		RegDst = new regT < bool > ("RegDst");
+		RegDst->din(RegDst_id);
+		RegDst->dout(RegDst_exe);
+		RegDst->clk(clk);
+		RegDst->enable(enable);
+		RegDst->reset(reset);
 
 		PC4 = new regT < sc_uint<32> >("PC4");
 		PC4->din(PC4_id);
