@@ -182,7 +182,7 @@ SC_MODULE(mips) {
 	//MEM
 	sc_signal < sc_uint<32> > MemOut;   // data memory output
 	sc_signal < sc_uint<32> > ALUOut_mem, ALUOut_mem2, BranchTarget_mem, BranchTarget_mem2, PC4_mem, PC4_mem2;   
-	sc_signal < sc_uint<5> > WriteReg_mem, WriteReg_mem2;   
+	sc_signal < sc_uint<5> > WriteReg_mem, WriteReg_mem2, rs_mem, rs_mem2;
 	sc_signal <bool> MemRead_mem, MemWrite_mem, MemtoReg_mem, MemtoReg_mem2;
 	sc_signal <bool> RegWrite_mem, RegWrite_mem2;
 	sc_signal <bool> Branch_mem, Branch_mem2, Zero_mem, Link_mem, Link_mem2;

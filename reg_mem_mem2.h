@@ -26,8 +26,8 @@ SC_MODULE(reg_mem_mem2_t) {
     sc_in  < sc_uint<32> > aluOut_mem, PC4_mem;
     sc_out < sc_uint<32> > aluOut_mem2, PC4_mem2;
 
-    sc_in  < sc_uint<5> > WriteReg_mem;
-    sc_out < sc_uint<5> > WriteReg_mem2;
+    sc_in  < sc_uint<5> > WriteReg_mem, rs_mem;
+    sc_out < sc_uint<5> > WriteReg_mem2, rs_mem2;
 
     sc_in  < bool > MemtoReg_mem, RegWrite_mem;
     sc_out < bool > MemtoReg_mem2, RegWrite_mem2;
@@ -42,7 +42,7 @@ SC_MODULE(reg_mem_mem2_t) {
     // Modules
 
     regT < sc_uint<32> > *aluOut, *PC4;
-    regT < sc_uint<5> > *WriteReg;
+    regT < sc_uint<5> > *WriteReg, *rs;
     regT < bool > *MemtoReg, *RegWrite, *Link;
 
     regT < sc_uint<32> > *PC;        // only for visualization purposes
@@ -77,6 +77,13 @@ SC_MODULE(reg_mem_mem2_t) {
         WriteReg->clk(clk);
         WriteReg->enable(enable);
         WriteReg->reset(reset);
+
+        rs = new regT < sc_uint<5> > ("rs");;
+        rs->din(rs_mem);
+        rs->dout(rs_mem2);
+        rs->clk(clk);
+        rs->enable(enable);
+        rs->reset(reset);
 
         MemtoReg = new regT < bool >("MemtoReg");
         MemtoReg->din(MemtoReg_mem);

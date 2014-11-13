@@ -346,6 +346,8 @@ void mips::buildArchitecture(void) {
     reg_exe_mem->regb_mem(regb_mem);
     reg_exe_mem->WriteReg_exe(WriteReg_exe);
     reg_exe_mem->WriteReg_mem(WriteReg_mem);
+    reg_exe_mem->rs_exe(rs_exe);
+    reg_exe_mem->rs_mem(rs_mem);
     reg_exe_mem->PC_exe(PC_exe);
     reg_exe_mem->PC_mem(PC_mem);
     reg_exe_mem->valid_exe(valid_exe);
@@ -376,6 +378,8 @@ void mips::buildArchitecture(void) {
     reg_mem_mem2->Branch_mem2(Branch_mem2);
     reg_mem_mem2->WriteReg_mem(WriteReg_mem);
     reg_mem_mem2->WriteReg_mem2(WriteReg_mem2);
+    reg_mem_mem2->rs_mem(rs_mem);
+    reg_mem_mem2->rs_mem2(rs_mem2);
     reg_mem_mem2->PC_mem(PC_mem);
     reg_mem_mem2->PC_mem2(PC_mem2);
     reg_mem_mem2->valid_mem(valid_mem);
