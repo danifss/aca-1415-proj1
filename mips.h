@@ -210,7 +210,7 @@ SC_MODULE(mips) {
 
 
 	// FORWARDING UNIT SIGNALS
-	sc_signal< bool > forwd_exe_ifid_regdata1, forwd_exe_ifid_regdata2;
+	sc_signal< bool > forwd_exe_idexe_regdata1, forwd_exe_idexe_regdata2;
 
 	//nonpipelined signals
 	sc_signal < sc_uint<32> > BranchTarget; // PC if branch
