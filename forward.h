@@ -39,8 +39,8 @@ SC_MODULE( forward )
  //    sc_in< bool > JumpReg;
  //    sc_in< bool > Link;
 
-    sc_out< bool >  forwd_exe_ifid_regdata1;
-    sc_out< bool >  forwd_exe_ifid_regdata2;
+    sc_out< bool >  forwd_exe_idexe_regdata1;
+    sc_out< bool >  forwd_exe_idexe_regdata2;
 
     SC_CTOR(forward)
     {      

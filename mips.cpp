@@ -91,13 +91,13 @@ void mips::buildID(void) {
     mux_forwd_regdata1 = new mux< sc_uint<32> > ("mux_forwd_regdata1");
     mux_forwd_regdata1->din0(regdata1_prev);
     mux_forwd_regdata1->din1(ALUOut);
-    mux_forwd_regdata1->sel(forwd_exe_ifid_regdata1);
+    mux_forwd_regdata1->sel(forwd_exe_idexe_regdata1);
     mux_forwd_regdata1->dout(regdata1);
 
     mux_forwd_regdata2 = new mux< sc_uint<32> > ("mux_forwd_regdata2");
     mux_forwd_regdata2->din0(regdata2_prev);
     mux_forwd_regdata2->din1(ALUOut);
-    mux_forwd_regdata2->sel(forwd_exe_ifid_regdata2);
+    mux_forwd_regdata2->sel(forwd_exe_idexe_regdata2);
     mux_forwd_regdata2->dout(regdata2);
 
     // 16 to 32 bit signed Immediate extension
@@ -432,8 +432,8 @@ void mips::buildArchitecture(void) {
     buildWB();
 
     forward_unit = new forward("forward_unit");
-    forward_unit->forwd_exe_ifid_regdata1(forwd_exe_ifid_regdata1);
-    forward_unit->forwd_exe_ifid_regdata2(forwd_exe_ifid_regdata2);
+    forward_unit->forwd_exe_idexe_regdata1(forwd_exe_idexe_regdata1);
+    forward_unit->forwd_exe_idexe_regdata2(forwd_exe_idexe_regdata2);
     forward_unit->WriteReg_exe(WriteReg_exe);
     forward_unit->RegWrite_exe(RegWrite_exe);
     forward_unit->WriteReg_mem(WriteReg_mem);
