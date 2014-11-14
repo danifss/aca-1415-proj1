@@ -5,7 +5,7 @@ HEADERS		= mips.h\
                   imem.h decode.h regfile.h alu.h dmem.h control.h\
 		  mem32.h mux.h muxj.h muxl.h reg.h add.h gates.h ext.h shiftl2.h\
 		  regT.h reg_id_exe.h reg_exe_mem.h reg_mem_mem2.h reg_mem2_wb.h\
-		  hazard.h\
+		  hazard.h forward.h\
 		  mipsaux.h compare.h gatesbitwise.h\
 		  GUI/MIPSctrl.h\
 		  GUI/MIPSarch.h GUI/MIPSmods.h GUI/modview.h\
@@ -17,7 +17,7 @@ HEADERS		= mips.h\
 SOURCES		= main.cpp mips.cpp\
                   imem.cpp decode.cpp regfile.cpp alu.cpp dmem.cpp control.cpp\
 		  mem32.cpp reg.cpp add.cpp gates.cpp ext.cpp shiftl2.cpp\
-		  hazard.cpp\
+		  hazard.cpp forward.cpp\
 		  mipsaux.cpp compare.cpp gatesbitwise.cpp\
 		  GUI/MIPSctrl.cpp\ 
 		  GUI/MIPSarch.cpp GUI/MIPSmods.cpp GUI/modview.cpp\

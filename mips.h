@@ -17,6 +17,7 @@
 #include "dmem.h"
 #include "control.h"
 #include "hazard.h"
+#include "forward.h"
 
 #include "mux.h"
 #include "muxj.h"
@@ -72,12 +73,15 @@ SC_MODULE(mips) {
 	ext *e1;                      // sign extends imm to 32 bits
 	orgate *or_reset_idexe;
 	hazard *hazard_unit;
+	forward *forward_unit;
 	compare *comp;
 	orbitwise *jumpT;
 	andbitwise *pc4bitms;
 	shiftl2 *sl2;                 // shift left 2 imm_ext
 	add *addbr;                   // adds imm to PC + 4
 	muxl< sc_uint<5> > *link;
+	mux< sc_uint<32> > *mux_forwd_regdata1;
+	mux< sc_uint<32> > *mux_forwd_regdata2;
 
 
 	//EXE
@@ -132,8 +136,8 @@ SC_MODULE(mips) {
 	sc_signal < sc_uint<5> > WriteReg_prev;  // register to write
 	sc_signal < sc_uint<5> > WriteReg;  // register to write
 
-	sc_signal < sc_uint<32> > regdata1, // value of register rs
-						regdata2, // value of regiter rt
+	sc_signal < sc_uint<32> > regdata1, regdata1_prev, // value of register rs
+						regdata2, regdata2_prev, // value of regiter rt
 						WriteVal; // value to write in register WriteReg
 
 	sc_signal < sc_uint<32> > imm_ext;  // imm sign extended
@@ -203,6 +207,10 @@ SC_MODULE(mips) {
 	// they are used only for visualization purposes
 	sc_signal < sc_uint<32> > PC_wb;   
 	sc_signal < bool > valid_wb;
+
+
+	// FORWARDING UNIT SIGNALS
+	sc_signal< bool > forwd_exe_ifid_regdata1, forwd_exe_ifid_regdata2;
 
 	//nonpipelined signals
 	sc_signal < sc_uint<32> > BranchTarget; // PC if branch
