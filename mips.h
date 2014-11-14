@@ -79,25 +79,27 @@ SC_MODULE(mips) {
 	andbitwise *pc4bitms;
 	shiftl2 *sl2;                 // shift left 2 imm_ext
 	add *addbr;                   // adds imm to PC + 4
+	andgate *a1;                  // beq instruction and equal values
 	muxl< sc_uint<5> > *link;
-	mux< sc_uint<32> > *mux_forwd_regdata1;
-	mux< sc_uint<32> > *mux_forwd_regdata2;
+	muxj< sc_uint<32> > *mux_forwd_id_regdata1; // selects source to regdata1 on ID phase
+	muxj< sc_uint<32> > *mux_forwd_id_regdata2; // selects source to regdata1 on ID phase
+//	mux< sc_uint<32> > *mux_forwd_regdata1;
+//	mux< sc_uint<32> > *mux_forwd_regdata2;
 
 
 	//EXE
 	alu               *alu1;      // ALU
 	mux< sc_uint<32> > *m1;       // selects 2nd ALU operand
-	mux< sc_uint<5> > *mux_rsrt;  // selects rs or rt to RDD
+	mux< sc_uint<5> > *mux_rdrt;  // selects rd or rt to RDD
 	orgate *or_reset_exemem;
 
 	//MEM
 	dmem              *datamem;   // data memory
-	andgate *a1;                  // beq instruction and equal values
 
 	//WB
-//	mux< sc_uint<32> > *m2;       // selects value to write in register (ALUout or MemOut)
+//	mux< sc_uint<32> > *m2;       // selects value to write in register (ALUOut or MemOut)
 //	mux< sc_uint<32> > *muxlinkval;
-	muxj< sc_uint<32> > *m3;      // selects value to write in register (ALUout or MemOut or PC4_wb)
+	muxj< sc_uint<32> > *m3;      // selects value to write in register (ALUOut or MemOut or PC4_wb)
 
 	//pipeline registers
 	reg_if_id_t       *reg_if_id;
@@ -113,6 +115,9 @@ SC_MODULE(mips) {
 						NPC,      // Next Program Counter
 						PC4;      // PC + 4
 	sc_signal < sc_uint<32> > inst;     // current instruction
+
+	sc_signal< sc_uint<32> > ALUOut_exe_if, ALUOut_mem_if;
+
 	sc_signal <bool> enable_pc;
 	sc_signal <bool> enable_ifid;
 	sc_signal <bool> reset_haz_ifid, reset_ifid;
@@ -123,6 +128,8 @@ SC_MODULE(mips) {
 						PC4_id;
 	sc_signal < sc_uint<32> > PC4_id_4bitms;
 	sc_signal <bool> res_comp;
+
+	sc_signal< sc_uint<32> > ALUOut_exe_id, ALUOut_mem_id;
 
 	sc_signal < sc_uint<32> > addr_ext; // imm_ext shift left 2
 	sc_signal < sc_uint<32> > NPC_prev; // NPC para descobrir se há jumpRegister ou não
@@ -210,7 +217,9 @@ SC_MODULE(mips) {
 
 
 	// FORWARDING UNIT SIGNALS
-	sc_signal< bool > forwd_exe_idexe_regdata1, forwd_exe_idexe_regdata2;
+	sc_signal< bool > forwd_mem_ifid_regdata1, forwd_mem_ifid_regdata2, // forwarding to IF/ID
+					forwd_exe_ifid_regdata1, forwd_exe_ifid_regdata2;
+	sc_signal< bool > forwd_exe_idexe_regdata1, forwd_exe_idexe_regdata2; // forwarding to ID/EXE
 
 	//nonpipelined signals
 	sc_signal < sc_uint<32> > BranchTarget; // PC if branch
