@@ -14,11 +14,11 @@ void hazard::detect_hazard()
         || rt.read() != 0 && rt.read() == WriteReg_mem.read() && RegWrite_mem.read() == true
         || rt.read() != 0 && rt.read() == WriteReg_mem2.read() && RegWrite_mem2.read() == true){
 
-		enable_pc.write(false);
-		enable_ifid.write(false);
-		reset_ifid.write(false);
-		reset_idexe.write(true);
-		reset_exemem.write(false);
+		// enable_pc.write(false);
+		// enable_ifid.write(false);
+		// reset_ifid.write(false);
+		// reset_idexe.write(true);
+		// reset_exemem.write(false);
 	}
 	else
 	{

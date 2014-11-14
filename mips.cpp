@@ -76,14 +76,29 @@ void mips::buildID(void) {
     rfile->reg1(rs);
     rfile->reg2(rt);
     rfile->regwrite(WriteReg_wb);
-    rfile->data1(regdata1);
-    rfile->data2(regdata2);
+    rfile->data1(regdata1_prev);
+    rfile->data2(regdata2_prev);
 
     rfile->wr(RegWrite_wb);
     rfile->datawr(WriteVal);
 
     rfile->clk(clk);
     rfile->reset(reset);
+
+    
+
+    // multiplexers de forwarding
+    mux_forwd_regdata1 = new mux< sc_uint<32> > ("mux_forwd_regdata1");
+    mux_forwd_regdata1->din0(regdata1_prev);
+    mux_forwd_regdata1->din1(ALUOut);
+    mux_forwd_regdata1->sel(forwd_exe_ifid_regdata1);
+    mux_forwd_regdata1->dout(regdata1);
+
+    mux_forwd_regdata2 = new mux< sc_uint<32> > ("mux_forwd_regdata2");
+    mux_forwd_regdata2->din0(regdata2_prev);
+    mux_forwd_regdata2->din1(ALUOut);
+    mux_forwd_regdata2->sel(forwd_exe_ifid_regdata2);
+    mux_forwd_regdata2->dout(regdata2);
 
     // 16 to 32 bit signed Immediate extension
     e1 = new ext("ext");
@@ -416,6 +431,19 @@ void mips::buildArchitecture(void) {
 
     buildWB();
 
+    forward_unit = new forward("forward_unit");
+    forward_unit->forwd_exe_ifid_regdata1(forwd_exe_ifid_regdata1);
+    forward_unit->forwd_exe_ifid_regdata2(forwd_exe_ifid_regdata2);
+    forward_unit->WriteReg_exe(WriteReg_exe);
+    forward_unit->RegWrite_exe(RegWrite_exe);
+    forward_unit->WriteReg_mem(WriteReg_mem);
+    forward_unit->RegWrite_mem(RegWrite_mem);
+    forward_unit->WriteReg_mem2(WriteReg_mem2);
+    forward_unit->RegWrite_mem2(RegWrite_mem2);
+    forward_unit->rs_id(rs);
+    forward_unit->rt_id(rt);
+    forward_unit->rd_id(rd);
+
     hazard_unit = new hazard("hazard_unit");
     hazard_unit->rs(rs);
     hazard_unit->rt(rt);
@@ -446,6 +474,7 @@ mips::~mips(void) {
     delete mr;
     delete link;
     delete rfile;
+    // falta delete dos mux
     delete e1;
     delete ctrl;
     delete sl2;
@@ -464,6 +493,7 @@ mips::~mips(void) {
 //    delete muxlinkval;
 
     delete hazard_unit;
+    delete forward_unit;
     delete or_reset_ifid;
     delete or_reset_idexe;
     delete or_reset_exemem;
