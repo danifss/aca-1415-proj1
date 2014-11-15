@@ -3,14 +3,14 @@
 
 /**
  *
- * 2:1 Mux module template.
+ * 3:1 Mux module template.
  */
 
 #include <systemc.h>
 
 /**
  * Mux module.
- * Mux module models a generic 2:1 multiplexor of template type T. 
+ * Mux module models a generic 3:1 multiplexor of template type T. 
  * Implementation based on a template class.
  *
  *   - input ports

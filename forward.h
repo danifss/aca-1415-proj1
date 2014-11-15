@@ -28,22 +28,18 @@
 SC_MODULE( forward )
 {
   public: 
-    sc_in< sc_uint<5> >  rs_id;
-    sc_in< sc_uint<5> >  rt_id;
-    sc_in< sc_uint<5> >  rd_id;
+    sc_in< sc_uint<5> >  rs_id, rt_id, rd_id;
     sc_in< sc_uint<5> >  WriteReg_exe, WriteReg_mem, WriteReg_mem2;
     sc_in< bool > RegWrite_exe, RegWrite_mem, RegWrite_mem2;
-	// sc_in< bool > MemRead;
-	// sc_in< bool > BranchTaken;
- //    sc_in< bool > Jump;
- //    sc_in< bool > JumpReg;
- //    sc_in< bool > Link;
 
-    sc_out< bool >  forwd_exe_ifid_regdata1, forwd_mem_ifid_regdata1;
-    sc_out< bool >  forwd_exe_ifid_regdata2, forwd_mem_ifid_regdata2;
+//	sc_in< bool > MemRead;
+//	sc_in< bool > BranchTaken;
+//  sc_in< bool > Jump;
+//  sc_in< bool > JumpReg;
+//  sc_in< bool > Link;
 
-    sc_out< bool > forwd_exe_idexe_regdata1;
-    sc_out< bool > forwd_exe_idexe_regdata2;
+    sc_out< bool >  forwd_idexe_r1_1, forwd_idexe_r1_2;
+    sc_out< bool >  forwd_idexe_r2_1, forwd_idexe_r2_2;
 
     SC_CTOR(forward)
     {      

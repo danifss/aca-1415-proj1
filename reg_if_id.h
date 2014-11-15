@@ -26,9 +26,6 @@ SC_MODULE(reg_if_id_t) {
 	sc_in  < sc_uint<32> > inst_if, PC4_if;
 	sc_out < sc_uint<32> > inst_id, PC4_id;
 
-	sc_in  < sc_uint<32> > ALUOut_exe_if, ALUOut_mem_if;
-	sc_out < sc_uint<32> > ALUOut_exe_id, ALUOut_mem_id;
-
 	sc_in  < sc_uint<32> > PC_if;     // only for visualization purposes
 	sc_in  < bool >        valid_if;  // only for visualization purposes
 	sc_out < sc_uint<32> > PC_id;     // only for visualization purposes
@@ -37,7 +34,7 @@ SC_MODULE(reg_if_id_t) {
 	// Modules
 
 	regT < sc_uint<32> > *inst, *PC4;
-	regT < sc_uint<32> > *ALUOut_exe, *ALUOut_mem;
+
 	regT < sc_uint<32> > *PC;        // only for visualization purposes
 	regT < bool > *valid;            // only for visualization purposes
 
@@ -57,20 +54,6 @@ SC_MODULE(reg_if_id_t) {
 		PC4->enable(enable);
 		PC4->reset(reset);
 
-		ALUOut_exe = new regT < sc_uint<32> > ("ALUOut_exe");
-		ALUOut_exe->din(ALUOut_exe_if);
-		ALUOut_exe->dout(ALUOut_exe_id);
-		ALUOut_exe->clk(clk);
-		ALUOut_exe->enable(enable);
-		ALUOut_exe->reset(reset);
-
-		ALUOut_mem = new regT < sc_uint<32> > ("ALUOut_mem");
-		ALUOut_mem->din(ALUOut_mem_if);
-		ALUOut_mem->dout(ALUOut_mem_id);
-		ALUOut_mem->clk(clk);
-		ALUOut_mem->enable(enable);
-		ALUOut_mem->reset(reset);
-		
 		PC = new regT < sc_uint<32> > ("PC");;
 		PC->din(PC_if);
 		PC->dout(PC_id);
