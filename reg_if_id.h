@@ -26,6 +26,12 @@ SC_MODULE(reg_if_id_t) {
 	sc_in  < sc_uint<32> > inst_if, PC4_if;
 	sc_out < sc_uint<32> > inst_id, PC4_id;
 
+	sc_in  < sc_uint<32> > forwrd_ifid1_if, forwrd_ifid2_if; // forward signals
+	sc_out < sc_uint<32> > forwrd_ifid1_id, forwrd_ifid2_id; // forward signals
+
+	sc_in  < bool > mux_rs_sel_if, mux_rt_sel_if; // mux selection signals
+	sc_out < bool > mux_rs_sel_id, mux_rt_sel_id; // mux selection signals
+
 	sc_in  < sc_uint<32> > PC_if;     // only for visualization purposes
 	sc_in  < bool >        valid_if;  // only for visualization purposes
 	sc_out < sc_uint<32> > PC_id;     // only for visualization purposes
@@ -34,6 +40,9 @@ SC_MODULE(reg_if_id_t) {
 	// Modules
 
 	regT < sc_uint<32> > *inst, *PC4;
+
+	regT < sc_uint<32> > *forwrd_ifid1, *forwrd_ifid2;
+	regT < bool > *mux_rs_sel, *mux_rt_sel;
 
 	regT < sc_uint<32> > *PC;        // only for visualization purposes
 	regT < bool > *valid;            // only for visualization purposes
@@ -53,6 +62,34 @@ SC_MODULE(reg_if_id_t) {
 		PC4->clk(clk);
 		PC4->enable(enable);
 		PC4->reset(reset);
+
+		forwrd_ifid1 = new regT < sc_uint<32> > ("forwrd_ifid1");
+		forwrd_ifid1->din(forwrd_ifid1_if);
+		forwrd_ifid1->dout(forwrd_ifid1_id);
+		forwrd_ifid1->clk(clk);
+		forwrd_ifid1->enable(enable);
+		forwrd_ifid1->reset(reset);
+
+		forwrd_ifid2 = new regT < sc_uint<32> > ("forwrd_ifid2");
+		forwrd_ifid2->din(forwrd_ifid2_if);
+		forwrd_ifid2->dout(forwrd_ifid2_id);
+		forwrd_ifid2->clk(clk);
+		forwrd_ifid2->enable(enable);
+		forwrd_ifid2->reset(reset);
+
+		mux_rs_sel = new regT < bool > ("mux_rs_sel");
+		mux_rs_sel->din(mux_rs_sel_if);
+		mux_rs_sel->dout(mux_rs_sel_id);
+		mux_rs_sel->clk(clk);
+		mux_rs_sel->enable(enable);
+		mux_rs_sel->reset(reset);
+
+		mux_rt_sel = new regT < bool > ("mux_rt_sel");
+		mux_rt_sel->din(mux_rt_sel_if);
+		mux_rt_sel->dout(mux_rt_sel_id);
+		mux_rt_sel->clk(clk);
+		mux_rt_sel->enable(enable);
+		mux_rt_sel->reset(reset);
 
 		PC = new regT < sc_uint<32> > ("PC");;
 		PC->din(PC_if);

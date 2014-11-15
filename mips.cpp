@@ -38,6 +38,29 @@ void mips::buildIF(void) {
     mPC->din1(BranchTarget);
     mPC->dinj(JumpTarget); //ALTERAR PARA JUMP TARGET
     mPC->dout(NPC_prev);
+
+    preDecode = new decode("preDecode");
+    preDecode->inst(inst);
+    preDecode->rs(rs_if);
+    preDecode->rt(rt_if);
+    preDecode->rd(rd_if);
+    preDecode->imm(imm_if);
+    preDecode->opcode(opcode_if);
+    preDecode->shamt(shamt_if);
+    preDecode->funct(funct_if);
+
+    mux_forwd_ifid1 = new mux< sc_uint<32> > ("mux_forwd_ifid1");
+    mux_forwd_ifid1->din0(ALUOut);
+    mux_forwd_ifid1->din1(ALUOut_mem);
+    mux_forwd_ifid1->sel(forwd_ifid1_sel);
+    mux_forwd_ifid1->dout(forwd_ifid1_if);
+
+    mux_forwd_ifid2 = new mux< sc_uint<32> > ("mux_forwd_ifid2");
+    mux_forwd_ifid2->din0(ALUOut);
+    mux_forwd_ifid2->din1(ALUOut_mem);
+    mux_forwd_ifid2->sel(forwd_ifid2_sel);
+    mux_forwd_ifid2->dout(forwd_ifid2_if);
+
 }
 
 /**
@@ -85,25 +108,34 @@ void mips::buildID(void) {
     rfile->clk(clk);
     rfile->reset(reset);
 
-    
+    // multiplxers de forwarding para IF/ID
+    mux_rs = new mux< sc_uint<32> > ("mux_rs");
+    mux_rs->din0(regdata1_prev);
+    mux_rs->din1(forwd_ifid1_id);
+    mux_rs->sel(mux_rs_sel);
+    mux_rs->dout(regdata1_prev1);
 
-    // multiplexers de forwarding
+    mux_rt = new mux< sc_uint<32> > ("mux_rt");
+    mux_rt->din0(regdata2_prev);
+    mux_rt->din1(forwd_ifid2_id);
+    mux_rt->sel(mux_rt_sel);
+    mux_rt->dout(regdata2_prev1);
+
+    // multiplexers de forwarding para ID/EXE
     mux_forwd_regdata1 = new mux4< sc_uint<32> > ("mux_forwd_regdata1");
-    mux_forwd_regdata1->din0(regdata1_prev);  // 00
-    mux_forwd_regdata1->din1(ALUOut_mem2);    // 01
-    mux_forwd_regdata1->din2(ALUOut_mem);     // 10
-    mux_forwd_regdata1->din3(ALUOut);         // 11
-    mux_forwd_regdata1->sel0(forwd_idexe_r1_1);
-    mux_forwd_regdata1->sel1(forwd_idexe_r1_2);
+    mux_forwd_regdata1->din0(regdata1_prev1);
+    mux_forwd_regdata1->din1(ALUOut);
+    mux_forwd_regdata1->din2(ALUOut_mem2);
+    mux_forwd_regdata1->din3(ALUOut_mem);
+    mux_forwd_regdata1->sel(forwd_idexe_r1);
     mux_forwd_regdata1->dout(regdata1);
 
     mux_forwd_regdata2 = new mux4< sc_uint<32> > ("mux_forwd_regdata2");
-    mux_forwd_regdata2->din0(regdata2_prev);
-    mux_forwd_regdata2->din1(ALUOut_mem2);
-    mux_forwd_regdata2->din2(ALUOut_mem);
-    mux_forwd_regdata2->din3(ALUOut);
-    mux_forwd_regdata2->sel0(forwd_idexe_r2_1);
-    mux_forwd_regdata2->sel1(forwd_idexe_r2_2);
+    mux_forwd_regdata2->din0(regdata2_prev1);
+    mux_forwd_regdata2->din1(ALUOut);
+    mux_forwd_regdata2->din2(ALUOut_mem2);
+    mux_forwd_regdata2->din3(ALUOut_mem);
+    mux_forwd_regdata2->sel(forwd_idexe_r2);
     mux_forwd_regdata2->dout(regdata2);
 
     // 16 to 32 bit signed Immediate extension
@@ -188,7 +220,7 @@ void mips::buildEXE(void) {
     // Selects second operand of ALU
     m1 = new mux< sc_uint < 32 > > ("muxOp");
     m1->sel(ALUSrc_exe);
-    m1->din0(regb_exe);
+    m1->din0(regb_exe_prev);
     m1->din1(imm_exe);
     m1->dout(ALUIn2);
 
@@ -206,6 +238,14 @@ void mips::buildEXE(void) {
     mux_rdrt->din0(rt_exe);
     mux_rdrt->din1(rd_exe);
     mux_rdrt->dout(WriteReg_exe);
+
+    mux_forwd_exemem = new mux4< sc_uint<32> > ("mux_forwd_exemem");
+    mux_forwd_exemem->din0(regb_exe_prev);
+    mux_forwd_exemem->din1(MemOut_wb);
+    mux_forwd_exemem->din2(MemOut);
+    mux_forwd_exemem->din3(MemOut);
+    mux_forwd_exemem->sel(forwd_exemem);
+    mux_forwd_exemem->dout(regb_exe);
 }
 
 /**
@@ -276,6 +316,14 @@ void mips::buildArchitecture(void) {
     reg_if_id->inst_id(inst_id);
     reg_if_id->PC4_if(PC4);
     reg_if_id->PC4_id(PC4_id);
+    reg_if_id->forwrd_ifid1_if(forwd_ifid1_if); // valores de mux1 em if
+    reg_if_id->forwrd_ifid1_id(forwd_ifid1_id); // valores de mux1 em id
+    reg_if_id->forwrd_ifid2_if(forwd_ifid2_if); // valores de mux2 em if
+    reg_if_id->forwrd_ifid2_id(forwd_ifid2_id); // valores de mux2 em id
+    reg_if_id->mux_rs_sel_if(mux_rs_sel_if);    // sinal select mux_rs de forward_unit em if
+    reg_if_id->mux_rs_sel_id(mux_rs_sel);       // sinal select mux_rs de forward_unit em id
+    reg_if_id->mux_rt_sel_if(mux_rt_sel_if);    // sinal select mux_rt de forward_unit em if
+    reg_if_id->mux_rt_sel_id(mux_rt_sel);       // sinal select mux_rt de forward_unit em id
     reg_if_id->PC_if(PC);
     reg_if_id->PC_id(PC_id);
     reg_if_id->valid_if(const1);
@@ -298,7 +346,7 @@ void mips::buildArchitecture(void) {
     reg_id_exe->rega_id(regdata1);
     reg_id_exe->rega_exe(rega_exe);
     reg_id_exe->regb_id(regdata2);
-    reg_id_exe->regb_exe(regb_exe);
+    reg_id_exe->regb_exe(regb_exe_prev);
     reg_id_exe->imm_id(imm_ext);
     reg_id_exe->imm_exe(imm_exe);
     reg_id_exe->rs_id(rs);
@@ -436,19 +484,31 @@ void mips::buildArchitecture(void) {
     buildWB();
 
     forward_unit = new forward("forward_unit");
-    forward_unit->forwd_idexe_r1_1(forwd_idexe_r1_1);
-    forward_unit->forwd_idexe_r1_2(forwd_idexe_r1_2);
-    forward_unit->forwd_idexe_r2_1(forwd_idexe_r2_1);
-    forward_unit->forwd_idexe_r2_2(forwd_idexe_r2_2);
+    forward_unit->forwd_idexe_r1(forwd_idexe_r1);
+    forward_unit->forwd_idexe_r2(forwd_idexe_r2);
+    forward_unit->forwd_exemem(forwd_exemem);
     forward_unit->WriteReg_exe(WriteReg_exe);
     forward_unit->RegWrite_exe(RegWrite_exe);
     forward_unit->WriteReg_mem(WriteReg_mem);
     forward_unit->RegWrite_mem(RegWrite_mem);
     forward_unit->WriteReg_mem2(WriteReg_mem2);
     forward_unit->RegWrite_mem2(RegWrite_mem2);
+    forward_unit->WriteReg_wb(WriteReg_wb);
+    forward_unit->RegWrite_wb(RegWrite_wb);
     forward_unit->rs_id(rs);
     forward_unit->rt_id(rt);
     forward_unit->rd_id(rd);
+    forward_unit->rs_exe(rs_exe);
+    forward_unit->rt_exe(rt_exe);
+    forward_unit->rd_exe(rd_exe);
+    forward_unit->forwd_ifid1_sel(forwd_ifid1_sel); // liga o select do mux_forwd_ifid1 em if
+    forward_unit->forwd_ifid2_sel(forwd_ifid2_sel); // liga o select do mux_forwd_ifid2 em if
+    forward_unit->mux_rs_sel(mux_rs_sel_if); // liga o select do mux_rs no reg ifid
+    forward_unit->mux_rt_sel(mux_rt_sel_if); // liga o select do mux_rt no reg ifid
+    forward_unit->rs_if(rs_if);
+    forward_unit->rt_if(rt_if);
+    forward_unit->rd_if(rd_if);
+
 
     hazard_unit = new hazard("hazard_unit");
     hazard_unit->rs(rs);
@@ -476,11 +536,17 @@ mips::~mips(void) {
     delete instmem;
     delete add4;
     delete mPC;
+    //delete preDecode;
+    delete mux_forwd_ifid1;
+    delete mux_forwd_ifid2;
     delete dec1;
     delete mr;
     delete link;
     delete rfile;
-    // falta delete dos mux
+    delete mux_rs;
+    delete mux_rt;
+    delete mux_forwd_regdata1;
+    delete mux_forwd_regdata2;
     delete e1;
     delete ctrl;
     delete sl2;
@@ -493,10 +559,9 @@ mips::~mips(void) {
     delete m1;
     delete alu1;
     delete mux_rdrt;
+    delete mux_forwd_exemem;
     delete datamem;
     delete m3;
-//    delete m2;
-//    delete muxlinkval;
 
     delete hazard_unit;
     delete forward_unit;

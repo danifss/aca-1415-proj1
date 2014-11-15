@@ -29,8 +29,10 @@ SC_MODULE( forward )
 {
   public: 
     sc_in< sc_uint<5> >  rs_id, rt_id, rd_id;
-    sc_in< sc_uint<5> >  WriteReg_exe, WriteReg_mem, WriteReg_mem2;
-    sc_in< bool > RegWrite_exe, RegWrite_mem, RegWrite_mem2;
+    sc_in< sc_uint<5> >  rs_exe, rt_exe, rd_exe;
+    sc_in< sc_uint<5> >  WriteReg_exe, WriteReg_mem, WriteReg_mem2, WriteReg_wb;
+    sc_in< bool > RegWrite_exe, RegWrite_mem, RegWrite_mem2, RegWrite_wb;
+    sc_in< sc_uint<5> > rs_if, rt_if, rd_if;
 
 //	sc_in< bool > MemRead;
 //	sc_in< bool > BranchTaken;
@@ -38,16 +40,22 @@ SC_MODULE( forward )
 //  sc_in< bool > JumpReg;
 //  sc_in< bool > Link;
 
-    sc_out< bool >  forwd_idexe_r1_1, forwd_idexe_r1_2;
-    sc_out< bool >  forwd_idexe_r2_1, forwd_idexe_r2_2;
+
+    sc_out< sc_uint<2> > forwd_idexe_r1, forwd_idexe_r2;
+    sc_out< sc_uint<2> > forwd_exemem;
+    sc_out< bool > forwd_ifid1_sel, forwd_ifid2_sel;
+    sc_out< bool > mux_rs_sel, mux_rt_sel;
 
     SC_CTOR(forward)
     {      
         SC_METHOD(detect_forward);
         sensitive << rs_id << rt_id << rd_id
-		  << WriteReg_exe << RegWrite_exe
-		  << WriteReg_mem << RegWrite_mem
-          << WriteReg_mem2 << RegWrite_mem2;
+          << rs_exe << rt_exe << rd_exe
+          << rs_if << rt_if << rd_if
+		      << WriteReg_exe << RegWrite_exe
+		      << WriteReg_mem << RegWrite_mem
+          << WriteReg_mem2 << RegWrite_mem2
+          << WriteReg_wb << RegWrite_wb;
 			//<< MemRead << BranchTaken << Jump << JumpReg << Link;
    }
   

@@ -64,6 +64,9 @@ SC_MODULE(mips) {
 	add *add4;                    // adds 4 to PC
 	muxj< sc_uint<32> > *mPC;      // selects Next PC from PCbrach and PC + 4
 	orgate *or_reset_ifid;
+	decode *preDecode;
+	mux< sc_uint<32> > *mux_forwd_ifid1; // mux em if selects ALUOut or ALUOut_mem
+	mux< sc_uint<32> > *mux_forwd_ifid2; // mux em if selects ALUOut or ALUOut_mem
 
 	//ID
 	decode            *dec1;      // decodes instruction
@@ -82,10 +85,11 @@ SC_MODULE(mips) {
 	shiftl2 *sl2;                 // shift left 2 imm_ext
 	add *addbr;                   // adds imm to PC + 4
 	muxl< sc_uint<5> > *link;
-//	mux< sc_uint<32> > *mux_forwd_regdata1;
-//	mux< sc_uint<32> > *mux_forwd_regdata2;
-	mux4< sc_uint<32> > *mux_forwd_regdata1;
-	mux4< sc_uint<32> > *mux_forwd_regdata2;
+	mux< sc_uint<32> > *mux_rs; // mux em ID selects regdata1 or forward signals
+	mux< sc_uint<32> > *mux_rt; // mux em ID selects regdata2 or forward signals
+	mux4< sc_uint<32> > *mux_forwd_regdata1; // forwd ID/EXE
+	mux4< sc_uint<32> > *mux_forwd_regdata2; // forwd ID/EXE
+	mux4< sc_uint<32> > *mux_forwd_exemem;   // forwd EXE/MEM
 
 
 	//EXE
@@ -116,10 +120,21 @@ SC_MODULE(mips) {
 						NPC,      // Next Program Counter
 						PC4;      // PC + 4
 	sc_signal < sc_uint<32> > inst;     // current instruction
-	sc_signal <bool> enable_pc;
-	sc_signal <bool> enable_ifid;
-	sc_signal <bool> reset_haz_ifid, reset_ifid;
-	 
+	sc_signal < bool > enable_pc;
+	sc_signal < bool > enable_ifid;
+	sc_signal < bool > reset_haz_ifid, reset_ifid;
+	sc_signal < bool > forwd_ifid1_sel, forwd_ifid2_sel;
+	sc_signal < bool > forwd_ifid1_sel_if, forwd_ifid2_sel_id;
+	sc_signal < sc_uint<32> > forwd_ifid1_if, forwd_ifid2_if;
+	sc_signal < bool > mux_rs_sel_if, mux_rt_sel_if;
+
+	sc_signal < sc_uint<5> > rs_if, rt_if, rd_if;
+	//junk signals
+	sc_signal < sc_uint<16> > imm_if;
+	sc_signal < sc_uint<6> > opcode_if;
+	sc_signal < sc_uint<5> > shamt_if;
+	sc_signal < sc_uint<6> > funct_if;
+
 
 	//ID
 	sc_signal < sc_uint<32> > inst_id,  // current instruction ID phase
@@ -139,15 +154,15 @@ SC_MODULE(mips) {
 	sc_signal < sc_uint<5> > WriteReg_prev;  // register to write
 	sc_signal < sc_uint<5> > WriteReg;  // register to write
 
-	sc_signal < sc_uint<32> > regdata1, regdata1_prev, // value of register rs
-						regdata2, regdata2_prev, // value of regiter rt
+	sc_signal < sc_uint<32> > regdata1, regdata1_prev, regdata1_prev1, // value of register rs
+						regdata2, regdata2_prev, regdata2_prev1, // value of regiter rt
 						WriteVal; // value to write in register WriteReg
 
 	sc_signal < sc_uint<32> > imm_ext;  // imm sign extended
 
 	sc_signal < sc_uint<32> > rega_exe, // value of register rs EXE phase
-						regb_exe, // value of regiter rt EXE phase
-						regb_mem; // value of regiter rt MEM phase
+						regb_exe, regb_exe_prev, // value of register rt EXE phase
+						regb_mem; // value of register rt MEM phase
 
 	sc_signal <bool> reset_haz_idexe, reset_idexe;
 	// control signals
@@ -160,6 +175,8 @@ SC_MODULE(mips) {
 	sc_signal <bool> Link;
 	sc_signal < sc_uint<3> > ALUOp;
 	sc_signal <bool> Branch;
+
+	sc_signal < sc_uint<32> > forwd_ifid1_id, forwd_ifid2_id;
 
 	// the following two signals are not used by the architecture
 	// they are used only for visualization purposes
@@ -213,7 +230,10 @@ SC_MODULE(mips) {
 
 
 	// FORWARDING UNIT SIGNALS
-	sc_signal< bool > forwd_idexe_r1_1, forwd_idexe_r1_2, forwd_idexe_r2_1, forwd_idexe_r2_2;
+	sc_signal< sc_uint<2> > forwd_ifid1, forwd_ifid2;
+	sc_signal< bool > mux_rs_sel, mux_rt_sel;
+	sc_signal< sc_uint<2> > forwd_idexe_r1, forwd_idexe_r2;
+	sc_signal< sc_uint<2> > forwd_exemem;
 
 	//nonpipelined signals
 	sc_signal < sc_uint<32> > BranchTarget; // PC if branch
