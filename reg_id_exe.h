@@ -32,9 +32,6 @@ SC_MODULE(reg_id_exe_t) {
 	sc_in  < sc_uint<5> > rs_id, rt_id, rd_id;       // signals to propagate rs, rt, and rd values
 	sc_out < sc_uint<5> > rs_exe, rt_exe, rd_exe;    // signals to propagate rs, rt, and rd values
 
-//	sc_in  < sc_uint<5> > WriteReg_id;
-//	sc_out < sc_uint<5> > WriteReg_exe;
-
 	sc_in  < bool > MemRead_id, MemWrite_id, MemtoReg_id, RegDst_id;
 	sc_out < bool > MemRead_exe, MemWrite_exe, MemtoReg_exe, RegDst_exe;
 
@@ -55,7 +52,6 @@ SC_MODULE(reg_id_exe_t) {
 	regT < sc_uint<5> > *rs, *rt, *rd;
 	regT < bool > *Link, *MemRead, *MemWrite, *MemtoReg, *Branch,
 				*RegWrite, *ALUSrc, *RegDst;
-//	regT < sc_uint<5> > *WriteReg;
 	regT < sc_uint<3> > *ALUOp;
 
 	regT < sc_uint<32> > *PC;      // only for visualization purposes
@@ -105,13 +101,6 @@ SC_MODULE(reg_id_exe_t) {
 		rd->clk(clk);
 		rd->enable(enable);
 		rd->reset(reset);
-
-		// WriteReg = new regT < sc_uint<5> >("WriteReg");
-		// WriteReg->din(WriteReg_id);
-		// WriteReg->dout(WriteReg_exe);
-		// WriteReg->clk(clk);
-		// WriteReg->enable(enable);
-		// WriteReg->reset(reset);
 
 		RegDst = new regT < bool > ("RegDst");
 		RegDst->din(RegDst_id);
