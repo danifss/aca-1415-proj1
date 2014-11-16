@@ -6,13 +6,25 @@
  */
 void forward::detect_forward()
 {
-	// bool flag = false;
 
-
-	forwd_ifid1_sel.write(0);
-	forwd_ifid2_sel.write(0);
-	mux_rs_sel.write(0);
-	mux_rt_sel.write(0);
+	// mux_forwd_ifid1 IF/ID
+	if(RegWrite_exe.read() && (rs_if.read() == rs_id.read())){
+		forwd_ifid1_sel.write(1);
+		mux_rs_sel.write(1);
+	}
+	else{
+		forwd_ifid1_sel.write(0);
+		mux_rs_sel.write(0);
+	}
+	// mux_forwd_ifid2 IF/ID
+	if(RegWrite_exe.read() && (rt_if.read() == rs_id.read())){
+		forwd_ifid2_sel.write(1);
+		mux_rt_sel.write(1);
+	}
+	else{
+		forwd_ifid2_sel.write(0);
+		mux_rt_sel.write(0);
+	}
 
 
 	// mux_forwd_regdata1 ID/EXE 1
