@@ -33,6 +33,7 @@ SC_MODULE( hazard )
     sc_in< sc_uint<5> >  WriteReg_exe, WriteReg_mem, WriteReg_mem2;        
     sc_in< bool > RegWrite_exe, RegWrite_mem, RegWrite_mem2;        
 	sc_in< bool > MemRead;
+    sc_in< bool > Branch;
 	sc_in< bool > BranchTaken;
     sc_in< bool > Jump;
     sc_in< bool > JumpReg;

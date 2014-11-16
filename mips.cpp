@@ -525,6 +525,7 @@ void mips::buildArchitecture(void) {
     hazard_unit->MemRead(MemRead);
     hazard_unit->reset_ifid(reset_haz_ifid);
     hazard_unit->reset_exemem(reset_haz_exemem);
+    hazard_unit->Branch(Branch);
     hazard_unit->BranchTaken(BranchTaken);
     hazard_unit->Jump(Jump);
     hazard_unit->JumpReg(JumpReg);
@@ -536,7 +537,7 @@ mips::~mips(void) {
     delete instmem;
     delete add4;
     delete mPC;
-    //delete preDecode;
+    delete preDecode;
     delete mux_forwd_ifid1;
     delete mux_forwd_ifid2;
     delete dec1;
