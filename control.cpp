@@ -99,6 +99,7 @@ void control::entry()
 	    ALUOp.write(2);
 	    break;
     case 43: // sw
+    	RegDst.write(0); // pass rt
         ALUSrc.write(1);
 	    RegWrite.write(0);
 	    MemRead.write(0);

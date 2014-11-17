@@ -30,9 +30,10 @@ SC_MODULE( hazard )
   public: 
     sc_in< sc_uint<5> >  rs;
     sc_in< sc_uint<5> >  rt;        
-    sc_in< sc_uint<5> >  WriteReg_exe, WriteReg_mem, WriteReg_mem2;        
-    sc_in< bool > RegWrite_exe, RegWrite_mem, RegWrite_mem2;        
-	sc_in< bool > MemRead;
+    sc_in< sc_uint<5> >  WriteReg_exe, WriteReg_mem2, WriteReg_mem;        
+    sc_in< bool > RegWrite, RegWrite_exe, RegWrite_mem, RegWrite_mem2;
+    sc_in< bool > MemRead_mem, MemRead_exe, MemRead;
+    sc_in< bool > MemWrite_exe, MemWrite;
     sc_in< bool > Branch;
 	sc_in< bool > BranchTaken;
     sc_in< bool > Jump;
@@ -45,11 +46,13 @@ SC_MODULE( hazard )
     {      
         SC_METHOD(detect_hazard);
         sensitive << rs << rt 
+          << RegWrite
 		  << WriteReg_exe << RegWrite_exe
 		  << WriteReg_mem << RegWrite_mem
           << WriteReg_mem2 << RegWrite_mem2
-			<< MemRead
-			<< BranchTaken << Jump << JumpReg << Link;
+		  << MemRead << MemRead_exe << MemRead_mem
+          << MemWrite << MemWrite_exe
+		  << Branch << BranchTaken << Jump << JumpReg << Link;
    }
   
     void detect_hazard();

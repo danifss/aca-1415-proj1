@@ -243,7 +243,7 @@ void mips::buildEXE(void) {
     mux_forwd_exemem->din0(regb_exe_prev);
     mux_forwd_exemem->din1(MemOut_wb);
     mux_forwd_exemem->din2(MemOut);
-    mux_forwd_exemem->din3(MemOut);
+    mux_forwd_exemem->din3(ALUOut_mem);
     mux_forwd_exemem->sel(forwd_exemem);
     mux_forwd_exemem->dout(regb_exe);
 }
@@ -513,6 +513,7 @@ void mips::buildArchitecture(void) {
     hazard_unit = new hazard("hazard_unit");
     hazard_unit->rs(rs);
     hazard_unit->rt(rt);
+    hazard_unit->RegWrite(RegWrite);
     hazard_unit->WriteReg_exe(WriteReg_exe);
     hazard_unit->RegWrite_exe(RegWrite_exe);
     hazard_unit->WriteReg_mem(WriteReg_mem);
@@ -522,9 +523,13 @@ void mips::buildArchitecture(void) {
     hazard_unit->enable_pc(enable_pc);
     hazard_unit->enable_ifid(enable_ifid);
     hazard_unit->reset_idexe(reset_haz_idexe);
-    hazard_unit->MemRead(MemRead);
     hazard_unit->reset_ifid(reset_haz_ifid);
     hazard_unit->reset_exemem(reset_haz_exemem);
+    hazard_unit->MemRead(MemRead);
+    hazard_unit->MemRead_exe(MemRead_exe);
+    hazard_unit->MemRead_mem(MemRead_mem);
+    hazard_unit->MemWrite(MemWrite);
+    hazard_unit->MemWrite_exe(MemWrite_exe);
     hazard_unit->Branch(Branch);
     hazard_unit->BranchTaken(BranchTaken);
     hazard_unit->Jump(Jump);
