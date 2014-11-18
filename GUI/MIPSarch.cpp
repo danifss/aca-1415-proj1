@@ -320,6 +320,7 @@ MIPSarchCanvas::MIPSarchCanvas(mips &m, QObject *parent) : Q3Canvas(parent), mip
     portVal->setColor(QColor("blue"));
     portValVec.push_back(portVal);
 
+
     portVal=new PortValItem(this,mips1.reg_exe_mem->MemWrite_mem, "MemWrite_mem");
     portVal->move(652,102);
     portVal->setColor(QColor("blue"));
@@ -343,6 +344,11 @@ MIPSarchCanvas::MIPSarchCanvas(mips &m, QObject *parent) : Q3Canvas(parent), mip
     portVal=new PortValItem(this,mips1.datamem->dout, "dmem.dout");
     portVal->move(758,300);
     portVal->setColor(QColor("blue"));
+    portValVec.push_back(portVal);
+
+    portVal=new PortValItem(this,mips1.reg_mem_mem2->aluOut_mem2, "regb_mem2");
+    portVal->move(758,330);
+    portVal->setColor(QColor("black"));
     portValVec.push_back(portVal);
     /*
     portVal=new PortValItem(this,mips1.reg_exe_mem->Zero_mem, "Zero_mem");
