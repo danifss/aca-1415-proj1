@@ -122,19 +122,21 @@ void mips::buildID(void) {
     mux_rt->dout(regdata2_prev1);
 
     // multiplexers de forwarding para ID/EXE
-    mux_forwd_regdata1 = new mux4< sc_uint<32> > ("mux_forwd_regdata1");
+    mux_forwd_regdata1 = new mux5< sc_uint<32> > ("mux_forwd_regdata1");
     mux_forwd_regdata1->din0(regdata1_prev1);
     mux_forwd_regdata1->din1(ALUOut);
     mux_forwd_regdata1->din2(ALUOut_mem2);
     mux_forwd_regdata1->din3(ALUOut_mem);
+    mux_forwd_regdata1->din4(MemOut);
     mux_forwd_regdata1->sel(forwd_idexe_r1);
     mux_forwd_regdata1->dout(regdata1);
 
-    mux_forwd_regdata2 = new mux4< sc_uint<32> > ("mux_forwd_regdata2");
+    mux_forwd_regdata2 = new mux5< sc_uint<32> > ("mux_forwd_regdata2");
     mux_forwd_regdata2->din0(regdata2_prev1);
     mux_forwd_regdata2->din1(ALUOut);
     mux_forwd_regdata2->din2(ALUOut_mem2);
     mux_forwd_regdata2->din3(ALUOut_mem);
+    mux_forwd_regdata2->din4(MemOut);
     mux_forwd_regdata2->sel(forwd_idexe_r2);
     mux_forwd_regdata2->dout(regdata2);
 
@@ -441,6 +443,8 @@ void mips::buildArchitecture(void) {
     reg_mem_mem2->MemtoReg_mem2(MemtoReg_mem2);
     reg_mem_mem2->RegWrite_mem(RegWrite_mem);
     reg_mem_mem2->RegWrite_mem2(RegWrite_mem2);
+    reg_mem_mem2->MemRead_mem(MemRead_mem);
+    reg_mem_mem2->MemRead_mem2(MemRead_mem2);
     reg_mem_mem2->Branch_mem(Branch_mem);
     reg_mem_mem2->Branch_mem2(Branch_mem2);
     reg_mem_mem2->WriteReg_mem(WriteReg_mem);
@@ -495,6 +499,7 @@ void mips::buildArchitecture(void) {
     forward_unit->RegWrite_mem2(RegWrite_mem2);
     forward_unit->WriteReg_wb(WriteReg_wb);
     forward_unit->RegWrite_wb(RegWrite_wb);
+    forward_unit->MemRead_mem2(MemRead_mem2);
     forward_unit->rs_id(rs);
     forward_unit->rt_id(rt);
     forward_unit->rd_id(rd);

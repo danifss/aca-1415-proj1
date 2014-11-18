@@ -23,6 +23,7 @@
 #include "muxj.h"
 #include "muxl.h"
 #include "mux4.h"
+#include "mux5.h"
 #include "reg.h"
 #include "ext.h"
 #include "shiftl2.h"
@@ -87,8 +88,8 @@ SC_MODULE(mips) {
 	muxl< sc_uint<5> > *link;
 	mux< sc_uint<32> > *mux_rs; // mux em ID selects regdata1 or forward signals
 	mux< sc_uint<32> > *mux_rt; // mux em ID selects regdata2 or forward signals
-	mux4< sc_uint<32> > *mux_forwd_regdata1; // forwd ID/EXE
-	mux4< sc_uint<32> > *mux_forwd_regdata2; // forwd ID/EXE
+	mux5< sc_uint<32> > *mux_forwd_regdata1; // forwd ID/EXE
+	mux5< sc_uint<32> > *mux_forwd_regdata2; // forwd ID/EXE
 	mux4< sc_uint<32> > *mux_forwd_exemem;   // forwd EXE/MEM
 
 
@@ -207,7 +208,7 @@ SC_MODULE(mips) {
 	sc_signal < sc_uint<32> > MemOut;   // data memory output
 	sc_signal < sc_uint<32> > ALUOut_mem, ALUOut_mem2, BranchTarget_mem, BranchTarget_mem2, PC4_mem, PC4_mem2;   
 	sc_signal < sc_uint<5> > WriteReg_mem, WriteReg_mem2, rs_mem, rs_mem2;
-	sc_signal <bool> MemRead_mem, MemWrite_mem, MemtoReg_mem, MemtoReg_mem2;
+	sc_signal <bool> MemRead_mem, MemRead_mem2, MemWrite_mem, MemtoReg_mem, MemtoReg_mem2;
 	sc_signal <bool> RegWrite_mem, RegWrite_mem2;
 	sc_signal <bool> Branch_mem, Branch_mem2, Zero_mem, Link_mem, Link_mem2;
 
@@ -232,7 +233,7 @@ SC_MODULE(mips) {
 	// FORWARDING UNIT SIGNALS
 	sc_signal< sc_uint<2> > forwd_ifid1, forwd_ifid2;
 	sc_signal< bool > mux_rs_sel, mux_rt_sel;
-	sc_signal< sc_uint<2> > forwd_idexe_r1, forwd_idexe_r2;
+	sc_signal< sc_uint<3> > forwd_idexe_r1, forwd_idexe_r2;
 	sc_signal< sc_uint<2> > forwd_exemem;
 
 	//nonpipelined signals
