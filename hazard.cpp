@@ -24,7 +24,7 @@ void hazard::detect_hazard()
 	if((RegWrite_exe.read() == true) && (MemRead_exe.read() == true) && (rt.read() == WriteReg_exe.read())
 		&& (rt.read() != 0)) {
 		stall = true;
-		// SE escrever num registo; a instrucao seguinte for ler da memoria
+		// SE escrever num registo e a instrucao seguinte for ler da memoria
 		//  E: os registos RT e WriteReg_exe forem iguais, entao ha necessidade de um stall
 		enable_pc.write(false);
 		enable_ifid.write(false);
@@ -36,7 +36,7 @@ void hazard::detect_hazard()
 	else if((RegWrite_exe.read() == true) && (MemRead_exe.read() == true) && (rs.read() == WriteReg_exe.read())
 			&& (rs.read() != 0)) {
 		stall = true;	
-		// SE nao escrever num registo; a instrucao seguinte for ler da memoria
+		// SE escrever num registo e a instrucao seguinte for ler da memoria
 		//  E: os registos RS e WriteReg_exe forem iguais, entao ha necessidade de um stall
 		enable_pc.write(false);
 		enable_ifid.write(false);
@@ -48,7 +48,7 @@ void hazard::detect_hazard()
 	if((RegWrite_mem.read() == true) && (MemRead_mem.read() == true) && (rt.read() == WriteReg_mem.read())
 		&& (rt.read() != 0)) {
 		stall = true;
-		// SE escrever num registo; a instrucao seguinte for ler da memoria
+		// SE escrever num registo e a instrucao seguinte for ler da memoria
 		//  E: os registos RT e WriteReg_mem forem iguais, entao ha necessidade de um stall
 		enable_pc.write(false);
 		enable_ifid.write(false);
@@ -60,7 +60,7 @@ void hazard::detect_hazard()
 	else if((RegWrite_mem.read() == true) && (MemRead_mem.read() == true) && (rs.read() == WriteReg_mem.read())
 			&& (rs.read() != 0)) {
 		stall = true;	
-		// SE nao escrever num registo; a instrucao seguinte for ler da memoria
+		// SE escrever num registo e a instrucao seguinte for ler da memoria
 		//  E: os registos RS e WriteReg_mem forem iguais, entao ha necessidade de um stall
 		enable_pc.write(false);
 		enable_ifid.write(false);
@@ -68,28 +68,8 @@ void hazard::detect_hazard()
 		reset_idexe.write(true);
 		reset_exemem.write(false);
 	}
-	// else if((RegWrite.read() == false) && (MemWrite.read() == true) && (RegWrite_exe.read() == true)
-	// 	&& (MemRead_exe.read() == true) && (rt.read() == WriteReg_exe.read())) {
-	// 	// SE EM EXE: nao escrever num registo, for escrever na memoria; SE EM MEM for escrever num registo, for ler da memoria
-	// 	//         E: os registos RT tanto de EXE como de MEM forem iguais, entao ha necessidade de um stall
-	// 	enable_pc.write(false);
-	// 	enable_ifid.write(false);
-	// 	reset_ifid.write(false);
-	// 	reset_idexe.write(true);
-	// 	reset_exemem.write(false);
 
-	// }
-	// else if((RegWrite_exe.read() == false) && (MemWrite_exe.read() == true) && (RegWrite_mem.read() == true)
-	// 		&& (MemRead_mem.read() == true) && (WriteReg_exe.read() == WriteReg_mem.read())) {
-	// 	// SE EM EXE: nao escrever num registo, for escrever na memoria; SE EM MEM for escrever num registo, for ler da memoria
-	// 	//         E: os registos RT tanto de EXE como de MEM forem iguais, entao ha necessidade de um stall
-	// 	enable_pc.write(false);
-	// 	enable_ifid.write(false);
-	// 	reset_ifid.write(false);
-	// 	reset_idexe.write(false);
-	// 	reset_exemem.write(true);
 
-	// }
 	if(stall == false)
 	{
 		

@@ -30,7 +30,10 @@ void forward::detect_forward()
 	if((rd_id.read() != 0)){
 		// mux_forwd_regdata1 ID/EXE 1
 		forwd_idexe_r1.write(0);
-		if (RegWrite_mem.read() && (rs_id.read() == WriteReg_mem.read())){
+		if(RegWrite_mem2.read() && (rs_id.read() == WriteReg_mem2.read()) && MemRead_mem2.read()){
+			forwd_idexe_r1.write(4);
+		}
+		else if (RegWrite_mem.read() && (rs_id.read() == WriteReg_mem.read())){
 			forwd_idexe_r1.write(3);
 		}
 		else if (RegWrite_mem2.read() && (rs_id.read() == WriteReg_mem2.read())){
@@ -39,12 +42,12 @@ void forward::detect_forward()
 		else if (RegWrite_exe.read() && (rs_id.read() == WriteReg_exe.read())){
 			forwd_idexe_r1.write(1);
 		}
-		//else{
-			//forwd_idexe_r1.write(0);
-		//}
 		// mux_forwd_regdata2 ID/EXE 2
 		forwd_idexe_r2.write(0);
-		if (RegWrite_mem.read() && (rt_id.read() == WriteReg_mem.read())){
+		if(RegWrite_mem2.read() && (rt_id.read() == WriteReg_mem2.read()) && MemRead_mem2.read()){
+			forwd_idexe_r2.write(4);
+		}
+		else if (RegWrite_mem.read() && (rt_id.read() == WriteReg_mem.read())){
 			forwd_idexe_r2.write(3);
 		}
 		else if (RegWrite_mem2.read() && (rt_id.read() == WriteReg_mem2.read())){
@@ -53,9 +56,7 @@ void forward::detect_forward()
 		else if (RegWrite_exe.read() && (rt_id.read() == WriteReg_exe.read())){
 			forwd_idexe_r2.write(1);
 		}
-		//else{
-			forwd_idexe_r2.write(0);
-		//}
+		
 	}else{
 		forwd_idexe_r1.write(0);
 		forwd_idexe_r2.write(0);
